@@ -82,9 +82,12 @@ class SideNavBar extends StatelessWidget {
                 ),
                 _buildNavItem(
                   context,
-                  icon: IconsaxPlusLinear.setting_2,
-                  label: 'Settings',
-                  onTap: () {},
+                  icon: IconsaxPlusLinear.building,
+                  label: 'Company Profile Management',
+                  isSelected:
+                      GoRouterState.of(context).uri.toString() ==
+                      AppRouter.aboutUs,
+                  onTap: () => context.push(AppRouter.aboutUs),
                 ),
               ],
             ),

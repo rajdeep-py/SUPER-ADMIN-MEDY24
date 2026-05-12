@@ -14,4 +14,11 @@ class ApiUrls {
   static const String coreTestGetById = 'core-tests/get-by';
   static const String coreTestUpdateById = 'core-tests/update-by';
   static const String coreTestDeleteByIds = 'core-tests/delete-by-ids';
+
+  // About Us Endpoints
+  static const String aboutUsCreate = 'about-us/create';
+  static const String aboutUsGetAll = 'about-us/get-all';
+  static const String aboutUsGetById = 'about-us/get-by';
+  static const String aboutUsUpdateById = 'about-us/update-by';
+  static const String aboutUsDeleteById = 'about-us/delete-by';
 }

@@ -7,6 +7,7 @@ import '../screens/patho_lab/create_patho_lab_screen.dart';
 import '../screens/lab_test/lab_test_list_screen.dart';
 import '../screens/lab_test/lab_test_details_screen.dart';
 import '../screens/lab_test/create_lab_test_screen.dart';
+import '../screens/about_us/about_us_screen.dart';
 import '../models/patho_lab.dart';
 import '../models/lab_test.dart';
 
@@ -19,6 +20,7 @@ class AppRouter {
   static const String labTestList = '/lab-tests';
   static const String labTestDetails = '/lab-test-details';
   static const String createLabTest = '/create-lab-test';
+  static const String aboutUs = '/about-us';
 
   static final router = GoRouter(
     initialLocation: splash,
@@ -60,6 +62,10 @@ class AppRouter {
       GoRoute(
         path: createLabTest,
         builder: (context, state) => const CreateLabTestScreen(),
+      ),
+      GoRoute(
+        path: aboutUs,
+        builder: (context, state) => const AboutUsScreen(),
       ),
     ],
   );
