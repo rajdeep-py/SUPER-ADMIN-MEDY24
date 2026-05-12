@@ -31,7 +31,9 @@ class _PathoLabDetailsScreenState extends ConsumerState<PathoLabDetailsScreen> {
   late TextEditingController _addressController;
   late TextEditingController _emergencyController;
   late TextEditingController _whatsappController;
+  late TextEditingController _passwordController;
   String _status = 'active';
+  bool _obscurePassword = true;
 
   PlatformFile? _logoFile;
   PlatformFile? _certFile;
@@ -59,6 +61,7 @@ class _PathoLabDetailsScreenState extends ConsumerState<PathoLabDetailsScreen> {
     _whatsappController = TextEditingController(
       text: widget.lab.whatsappNumber,
     );
+    _passwordController = TextEditingController(text: widget.lab.password);
     _status = widget.lab.status;
     _currentLogoUrl = widget.lab.labLogoUrl;
     _currentCertName = widget.lab.registrationCertificateUrl.split('/').last;
@@ -76,6 +79,7 @@ class _PathoLabDetailsScreenState extends ConsumerState<PathoLabDetailsScreen> {
     _addressController.dispose();
     _emergencyController.dispose();
     _whatsappController.dispose();
+    _passwordController.dispose();
     super.dispose();
   }
 
@@ -110,6 +114,7 @@ class _PathoLabDetailsScreenState extends ConsumerState<PathoLabDetailsScreen> {
       'address': _addressController.text,
       'emergency_contact_number': _emergencyController.text,
       'whatsapp_number': _whatsappController.text,
+      'password': _passwordController.text,
       'status': _status,
     };
 
@@ -386,6 +391,14 @@ class _PathoLabDetailsScreenState extends ConsumerState<PathoLabDetailsScreen> {
                     _emailController,
                     IconsaxPlusLinear.sms,
                   ),
+                  _buildDetailField(
+                    'Password',
+                    _passwordController,
+                    IconsaxPlusLinear.key,
+                    isPassword: true,
+                    obscureText: _obscurePassword,
+                    onToggleVisibility: () => setState(() => _obscurePassword = !_obscurePassword),
+                  ),
 
                   const SizedBox(height: 32),
                   _buildSectionHeader(
@@ -485,6 +498,9 @@ class _PathoLabDetailsScreenState extends ConsumerState<PathoLabDetailsScreen> {
     TextEditingController controller,
     IconData icon, {
     int maxLines = 1,
+    bool isPassword = false,
+    bool obscureText = false,
+    VoidCallback? onToggleVisibility,
   }) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 24),
@@ -503,6 +519,7 @@ class _PathoLabDetailsScreenState extends ConsumerState<PathoLabDetailsScreen> {
             controller: controller,
             enabled: _isEditing,
             maxLines: maxLines,
+            obscureText: isPassword ? obscureText : false,
             style: AppTextStyles.description.copyWith(
               fontWeight: FontWeight.w600,
             ),
@@ -512,6 +529,18 @@ class _PathoLabDetailsScreenState extends ConsumerState<PathoLabDetailsScreen> {
                 size: 20,
                 color: _isEditing ? AppColors.primary : AppColors.textTertiary,
               ),
+              suffixIcon: isPassword
+                  ? IconButton(
+                      icon: Icon(
+                        obscureText
+                            ? IconsaxPlusLinear.eye_slash
+                            : IconsaxPlusLinear.eye,
+                        size: 20,
+                        color: AppColors.textTertiary,
+                      ),
+                      onPressed: onToggleVisibility,
+                    )
+                  : null,
               filled: true,
               fillColor: _isEditing
                   ? Colors.white

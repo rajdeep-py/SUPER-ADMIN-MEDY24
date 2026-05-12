@@ -133,38 +133,6 @@ class SideNavBar extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 24),
-          Row(
-            children: [
-              const CircleAvatar(
-                radius: 20,
-                backgroundColor: AppColors.blush,
-                child: Icon(
-                  IconsaxPlusLinear.user,
-                  color: AppColors.textSecondary,
-                  size: 20,
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Admin User',
-                      style: AppTextStyles.cardTitle.copyWith(fontSize: 14),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    Text(
-                      'admin@medy24.com',
-                      style: AppTextStyles.caption,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
         ],
       ),
     );
