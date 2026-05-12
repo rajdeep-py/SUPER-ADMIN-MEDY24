@@ -4,7 +4,11 @@ import '../screens/auth/login_screen.dart';
 import '../screens/patho_lab/patho_lab_list_screen.dart';
 import '../screens/patho_lab/patho_lab_details_screen.dart';
 import '../screens/patho_lab/create_patho_lab_screen.dart';
+import '../screens/lab_test/lab_test_list_screen.dart';
+import '../screens/lab_test/lab_test_details_screen.dart';
+import '../screens/lab_test/create_lab_test_screen.dart';
 import '../models/patho_lab.dart';
+import '../models/lab_test.dart';
 
 class AppRouter {
   static const String splash = '/';
@@ -12,6 +16,9 @@ class AppRouter {
   static const String pathoLabList = '/patho-labs';
   static const String pathoLabDetails = '/patho-lab-details';
   static const String createPathoLab = '/create-patho-lab';
+  static const String labTestList = '/lab-tests';
+  static const String labTestDetails = '/lab-test-details';
+  static const String createLabTest = '/create-lab-test';
 
   static final router = GoRouter(
     initialLocation: splash,
@@ -38,6 +45,21 @@ class AppRouter {
       GoRoute(
         path: createPathoLab,
         builder: (context, state) => const CreatePathoLabScreen(),
+      ),
+      GoRoute(
+        path: labTestList,
+        builder: (context, state) => const LabTestListScreen(),
+      ),
+      GoRoute(
+        path: labTestDetails,
+        builder: (context, state) {
+          final test = state.extra as LabTest;
+          return LabTestDetailsScreen(test: test);
+        },
+      ),
+      GoRoute(
+        path: createLabTest,
+        builder: (context, state) => const CreateLabTestScreen(),
       ),
     ],
   );

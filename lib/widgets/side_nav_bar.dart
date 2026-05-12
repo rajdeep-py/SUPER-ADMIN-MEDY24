@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
+import '../routes/app_router.dart';
 import '../theme/app_theme.dart';
 
 class SideNavBar extends StatelessWidget {
@@ -38,7 +40,10 @@ class SideNavBar extends StatelessWidget {
                   context,
                   icon: IconsaxPlusLinear.microscope,
                   label: 'Lab Test Management',
-                  onTap: () {},
+                  isSelected:
+                      GoRouterState.of(context).uri.toString() ==
+                      AppRouter.labTestList,
+                  onTap: () => context.push(AppRouter.labTestList),
                 ),
                 _buildNavItem(
                   context,
@@ -50,7 +55,10 @@ class SideNavBar extends StatelessWidget {
                   context,
                   icon: IconsaxPlusLinear.hospital,
                   label: 'Patho Lab Management',
-                  onTap: () {},
+                  isSelected:
+                      GoRouterState.of(context).uri.toString() ==
+                      AppRouter.pathoLabList,
+                  onTap: () => context.push(AppRouter.pathoLabList),
                 ),
                 _buildNavItem(
                   context,
