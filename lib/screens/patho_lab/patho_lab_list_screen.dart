@@ -29,8 +29,8 @@ class _PathoLabListScreenState extends ConsumerState<PathoLabListScreen> {
       backgroundColor: AppColors.background,
       drawer: const SideNavBar(),
       appBar: CustomAppBar(
-        title: 'Partners',
-        subtitle: 'Laboratory Ecosystem Management',
+        title: 'Laboratory Ecosystem',
+        subtitle: 'Network Intelligence Control',
         showDrawer: true,
         actions: [
           CustomAppBar.buildActionButton(
@@ -56,49 +56,87 @@ class _PathoLabListScreenState extends ConsumerState<PathoLabListScreen> {
               color: AppColors.primary,
               child: ListView(
                 padding: const EdgeInsets.symmetric(
-                  horizontal: AppSpacing.screenPadding,
-                  vertical: 24,
+                  horizontal: 24,
+                  vertical: 32,
                 ),
                 children: [
-                  _buildStatsSummary(pathoLabState),
+                  _buildGreeting(),
+                  const SizedBox(height: 32),
+                  _buildStatsGrid(pathoLabState),
                   const SizedBox(height: 32),
                   if (_isSearchVisible) ...[
                     const PathoLabSearchFilterCard(),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 32),
                   ],
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        'Active Laboratories',
-                        style: AppTextStyles.cardTitle.copyWith(
-                          fontSize: 20,
-                          color: AppColors.textPrimary,
-                        ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Partner Directory',
+                            style: AppTextStyles.cardTitle.copyWith(
+                              fontSize: 22,
+                              fontWeight: FontWeight.w900,
+                              color: AppColors.textPrimary,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            'Real-time status of all onboarded labs',
+                            style: AppTextStyles.caption,
+                          ),
+                        ],
                       ),
-                      Text(
-                        '${pathoLabState.filteredLabs.length} Results',
-                        style: AppTextStyles.caption.copyWith(
-                          fontWeight: FontWeight.w700,
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        decoration: BoxDecoration(
+                          color: AppColors.textPrimary,
+                          borderRadius: BorderRadius.circular(100),
+                        ),
+                        child: Text(
+                          '${pathoLabState.filteredLabs.length} TOTAL',
+                          style: AppTextStyles.caption.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w800,
+                            fontSize: 10,
+                          ),
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 24),
                   if (pathoLabState.filteredLabs.isEmpty)
                     _buildEmptyState()
                   else
                     ...pathoLabState.filteredLabs.map(
                       (lab) => PathoLabCard(
                         lab: lab,
-                        onTap: () =>
-                            context.push(AppRouter.pathoLabDetails, extra: lab),
+                        onTap: () => context.push(AppRouter.pathoLabDetails, extra: lab),
                       ),
                     ),
                   const SizedBox(height: 80),
                 ],
               ),
             ),
+    );
+  }
+
+  Widget _buildGreeting() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Command Center 👋',
+          style: AppTextStyles.header.copyWith(fontSize: 28, fontWeight: FontWeight.w900),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          'Overview of your laboratory network and operational health.',
+          style: AppTextStyles.description.copyWith(fontSize: 15),
+        ),
+      ],
     );
   }
 
@@ -109,11 +147,11 @@ class _PathoLabListScreenState extends ConsumerState<PathoLabListScreen> {
         gradient: const LinearGradient(
           colors: [AppColors.primary, AppColors.primaryAccent],
         ),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(14),
         boxShadow: [
           BoxShadow(
             color: AppColors.primary.withAlpha(77),
-            blurRadius: 12,
+            blurRadius: 15,
             offset: const Offset(0, 6),
           ),
         ],
@@ -121,99 +159,103 @@ class _PathoLabListScreenState extends ConsumerState<PathoLabListScreen> {
       child: ElevatedButton.icon(
         onPressed: () => context.push(AppRouter.createPathoLab),
         icon: const Icon(IconsaxPlusLinear.add_square, size: 18),
-        label: const Text('Onboard New'),
+        label: const Text('ONBOARD'),
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.transparent,
           shadowColor: Colors.transparent,
           padding: const EdgeInsets.symmetric(horizontal: 20),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+          textStyle: const TextStyle(fontWeight: FontWeight.w900, fontSize: 13, letterSpacing: 1),
         ),
       ),
     );
   }
 
-  Widget _buildStatsSummary(PathoLabState state) {
-    final activeCount = state.labs
-        .where((l) => l.status.toLowerCase() == 'active')
-        .length;
-    final suspendedCount = state.labs
-        .where((l) => l.status.toLowerCase() == 'suspended')
-        .length;
+  Widget _buildStatsGrid(PathoLabState state) {
+    final activeCount = state.labs.where((l) => l.status.toLowerCase() == 'active').length;
+    final suspendedCount = state.labs.where((l) => l.status.toLowerCase() == 'suspended').length;
+    final terminatedCount = state.labs.where((l) => l.status.toLowerCase() == 'terminated').length;
 
     return Row(
       children: [
         Expanded(
           child: _buildStatCard(
-            'Total Partners',
-            state.totalCount.toString(),
-            IconsaxPlusLinear.hospital,
-            AppColors.primary,
-          ),
-        ),
-        const SizedBox(width: 16),
-        Expanded(
-          child: _buildStatCard(
-            'Active',
+            'Active Nodes',
             activeCount.toString(),
-            IconsaxPlusLinear.verify,
+            IconsaxPlusLinear.radar,
             AppColors.success,
+            'Healthy Connectivity',
           ),
         ),
         const SizedBox(width: 16),
         Expanded(
           child: _buildStatCard(
-            'Alerts',
+            'Risk Alerts',
             suspendedCount.toString(),
             IconsaxPlusLinear.info_circle,
             AppColors.warning,
+            'Immediate Attention',
+          ),
+        ),
+        const SizedBox(width: 16),
+        Expanded(
+          child: _buildStatCard(
+            'Terminated',
+            terminatedCount.toString(),
+            IconsaxPlusLinear.shield_cross,
+            AppColors.error,
+            'Access Revoked',
           ),
         ),
       ],
     );
   }
 
-  Widget _buildStatCard(
-    String label,
-    String value,
-    IconData icon,
-    Color color,
-  ) {
+  Widget _buildStatCard(String label, String value, IconData icon, Color color, String tagline) {
     return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: AppCardStyles.sleekCard.copyWith(
-        gradient: LinearGradient(
-          colors: [Colors.white, color.withAlpha(5)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: AppColors.divider.withAlpha(80)),
+        boxShadow: [
+          BoxShadow(
+            color: color.withAlpha(10),
+            blurRadius: 30,
+            offset: const Offset(0, 10),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: color.withAlpha(26),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Icon(icon, color: color, size: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: color.withAlpha(20),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(icon, color: color, size: 22),
+              ),
+              const Icon(IconsaxPlusLinear.arrow_up_3, color: AppColors.success, size: 14),
+            ],
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 20),
           Text(
             value,
-            style: AppTextStyles.header.copyWith(
-              fontSize: 28,
-              color: AppColors.textPrimary,
-            ),
+            style: AppTextStyles.header.copyWith(fontSize: 32, fontWeight: FontWeight.w900),
           ),
+          const SizedBox(height: 4),
           Text(
             label,
-            style: AppTextStyles.caption.copyWith(
-              fontWeight: FontWeight.w600,
-              color: AppColors.textSecondary,
-            ),
+            style: AppTextStyles.caption.copyWith(fontWeight: FontWeight.w800, color: AppColors.textPrimary),
+          ),
+          Text(
+            tagline,
+            style: AppTextStyles.caption.copyWith(fontSize: 10, color: AppColors.textTertiary),
           ),
         ],
       ),
@@ -223,33 +265,26 @@ class _PathoLabListScreenState extends ConsumerState<PathoLabListScreen> {
   Widget _buildEmptyState() {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(60),
+        padding: const EdgeInsets.symmetric(vertical: 80),
         child: Column(
           children: [
             Container(
               padding: const EdgeInsets.all(32),
               decoration: BoxDecoration(
-                color: AppColors.surface,
+                color: Colors.white,
                 shape: BoxShape.circle,
                 boxShadow: [
-                  BoxShadow(
-                    color: AppColors.primary.withAlpha(13),
-                    blurRadius: 40,
-                  ),
+                  BoxShadow(color: Colors.black.withAlpha(5), blurRadius: 40),
                 ],
               ),
-              child: const Icon(
-                IconsaxPlusLinear.search_status,
-                size: 64,
-                color: AppColors.textTertiary,
-              ),
+              child: const Icon(IconsaxPlusLinear.search_status, size: 64, color: AppColors.textTertiary),
             ),
             const SizedBox(height: 24),
-            Text('No Laboratories Found', style: AppTextStyles.subHeader),
+            Text('No Laboratory Units Found', style: AppTextStyles.subHeader.copyWith(fontWeight: FontWeight.w900)),
             const SizedBox(height: 8),
             Text(
-              'Try adjusting your filters or search terms',
-              style: AppTextStyles.description,
+              'Your current network filter returned zero results.\nTry resetting your search parameters.',
+              style: AppTextStyles.description.copyWith(fontSize: 14),
               textAlign: TextAlign.center,
             ),
           ],

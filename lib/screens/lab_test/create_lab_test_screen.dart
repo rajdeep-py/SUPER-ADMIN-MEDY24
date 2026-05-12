@@ -14,8 +14,7 @@ class CreateLabTestScreen extends ConsumerStatefulWidget {
   const CreateLabTestScreen({super.key});
 
   @override
-  ConsumerState<CreateLabTestScreen> createState() =>
-      _CreateLabTestScreenState();
+  ConsumerState<CreateLabTestScreen> createState() => _CreateLabTestScreenState();
 }
 
 class _CreateLabTestScreenState extends ConsumerState<CreateLabTestScreen> {
@@ -30,6 +29,7 @@ class _CreateLabTestScreenState extends ConsumerState<CreateLabTestScreen> {
   final List<TextEditingController> _precautionControllers = [];
 
   PlatformFile? _testPhoto;
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -64,64 +64,51 @@ class _CreateLabTestScreenState extends ConsumerState<CreateLabTestScreen> {
   }
 
   void _submit() async {
-    if (_formKey.currentState!.validate()) {
-      final List<String> parameters = _parameterControllers
-          .where((c) => c.text.isNotEmpty)
-          .map((c) => c.text)
-          .toList();
+    if (!_formKey.currentState!.validate()) return;
+    
+    setState(() => _isLoading = true);
 
-      final List<String> precautions = _precautionControllers
-          .where((c) => c.text.isNotEmpty)
-          .map((c) => c.text)
-          .toList();
+    final List<String> parameters = _parameterControllers
+        .where((c) => c.text.isNotEmpty)
+        .map((c) => c.text)
+        .toList();
 
-      final Map<String, dynamic> data = {
-        'test_name': _nameController.text,
-        'test_category': _categoryController.text,
-        'sample_type': _sampleTypeController.text,
-        'description': _descriptionController.text,
-        'parameters': jsonEncode(parameters),
-        'precautions': jsonEncode(precautions),
-      };
+    final List<String> precautions = _precautionControllers
+        .where((c) => c.text.isNotEmpty)
+        .map((c) => c.text)
+        .toList();
 
-      final formData = FormData.fromMap(data);
+    final Map<String, dynamic> data = {
+      'test_name': _nameController.text,
+      'test_category': _categoryController.text,
+      'sample_type': _sampleTypeController.text,
+      'description': _descriptionController.text,
+      'parameters': jsonEncode(parameters),
+      'precautions': jsonEncode(precautions),
+    };
 
-      if (_testPhoto != null) {
-        if (kIsWeb) {
-          formData.files.add(
-            MapEntry(
-              'test_photo',
-              MultipartFile.fromBytes(
-                _testPhoto!.bytes!,
-                filename: _testPhoto!.name,
-              ),
-            ),
-          );
-        } else {
-          formData.files.add(
-            MapEntry(
-              'test_photo',
-              await MultipartFile.fromFile(_testPhoto!.path!),
-            ),
-          );
-        }
+    final formData = FormData.fromMap(data);
+
+    if (_testPhoto != null) {
+      if (kIsWeb) {
+        formData.files.add(MapEntry('test_photo', MultipartFile.fromBytes(_testPhoto!.bytes!, filename: _testPhoto!.name)));
+      } else {
+        formData.files.add(MapEntry('test_photo', await MultipartFile.fromFile(_testPhoto!.path!)));
       }
+    }
 
-      try {
-        await ref.read(labTestProvider.notifier).createTest(formData);
-        if (mounted) {
-          Navigator.pop(context);
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Lab Test created successfully')),
-          );
-        }
-      } catch (e) {
-        if (mounted) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text('Error: ${e.toString()}')));
-        }
+    try {
+      await ref.read(labTestProvider.notifier).createTest(formData);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Diagnostic Protocol Published')));
+        Navigator.pop(context);
       }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: ${e.toString()}')));
+      }
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
     }
   }
 
@@ -130,202 +117,170 @@ class _CreateLabTestScreenState extends ConsumerState<CreateLabTestScreen> {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: const CustomAppBar(
-        title: 'New Core Test',
-        subtitle: 'Configure a new laboratory investigation',
+        title: 'Protocol Formulation',
+        subtitle: 'Configure New Core Lab Test',
         showBackButton: true,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(AppSpacing.screenPadding),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              _buildSectionHeader(
-                '1',
-                'Primary Intelligence',
-                'Basic test identification details',
-              ),
-              const SizedBox(height: 24),
-              _buildModernCard([
-                _buildInputField(
-                  'Test Name',
-                  _nameController,
-                  IconsaxPlusLinear.hospital,
-                  true,
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: _buildInputField(
-                        'Category',
-                        _categoryController,
-                        IconsaxPlusLinear.category,
-                        true,
+      body: _isLoading 
+        ? const Center(child: CircularProgressIndicator())
+        : SingleChildScrollView(
+            padding: const EdgeInsets.all(32),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildHeaderInfo(),
+                  const SizedBox(height: 40),
+                  
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Left: Main Details
+                      Expanded(
+                        flex: 3,
+                        child: Column(
+                          children: [
+                            _buildSectionCard(
+                              'Primary Intelligence',
+                              IconsaxPlusLinear.personalcard,
+                              [
+                                _buildInputField('Clinical Test Name', _nameController, IconsaxPlusLinear.hospital, validator: (v) => v!.isEmpty ? 'Required' : null),
+                                Row(
+                                  children: [
+                                    Expanded(child: _buildInputField('Medical Category', _categoryController, IconsaxPlusLinear.category)),
+                                    const SizedBox(width: 20),
+                                    Expanded(child: _buildInputField('Biological Sample', _sampleTypeController, IconsaxPlusLinear.glass)),
+                                  ],
+                                ),
+                                _buildInputField('Diagnostic Description', _descriptionController, IconsaxPlusLinear.document_text, maxLines: 4),
+                              ],
+                            ),
+                            const SizedBox(height: 32),
+                            _buildSectionCard(
+                              'Visual Reference',
+                              IconsaxPlusLinear.camera,
+                              [_buildPhotoPicker()],
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: _buildInputField(
-                        'Sample Type',
-                        _sampleTypeController,
-                        IconsaxPlusLinear.glass,
-                        true,
+                      const SizedBox(width: 32),
+                      // Right: Dynamic Specs
+                      Expanded(
+                        flex: 2,
+                        child: Column(
+                          children: [
+                            _buildSectionCard(
+                              'Investigation Specs',
+                              IconsaxPlusLinear.setting_4,
+                              [
+                                ..._parameterControllers.asMap().entries.map((entry) {
+                                  return _buildDynamicField(
+                                    'Metric ${entry.key + 1}',
+                                    entry.value,
+                                    onDelete: entry.key > 0 ? () => setState(() => _parameterControllers.removeAt(entry.key)) : null,
+                                  );
+                                }),
+                                _buildAddButton('Add Investigation Metric', _addParameter),
+                              ],
+                            ),
+                            const SizedBox(height: 32),
+                            _buildSectionCard(
+                              'Safety Protocols',
+                              IconsaxPlusLinear.info_circle,
+                              [
+                                ..._precautionControllers.asMap().entries.map((entry) {
+                                  return _buildDynamicField(
+                                    'Protocol ${entry.key + 1}',
+                                    entry.value,
+                                    onDelete: entry.key > 0 ? () => setState(() => _precautionControllers.removeAt(entry.key)) : null,
+                                  );
+                                }),
+                                _buildAddButton('Add Handling Instruction', _addPrecaution),
+                              ],
+                            ),
+                            const SizedBox(height: 40),
+                            _buildSubmitButton(),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                _buildInputField(
-                  'Clinical Description',
-                  _descriptionController,
-                  IconsaxPlusLinear.document_text,
-                  true,
-                  maxLines: 3,
-                ),
-              ]),
-
-              const SizedBox(height: 32),
-              _buildSectionHeader(
-                '2',
-                'Visual Reference',
-                'Instructional photo for the test',
-              ),
-              const SizedBox(height: 24),
-              _buildModernCard([_buildPhotoPicker()]),
-
-              const SizedBox(height: 32),
-              _buildSectionHeader(
-                '3',
-                'Operational Parameters',
-                'Specific investigation metrics',
-              ),
-              const SizedBox(height: 24),
-              _buildModernCard([
-                ..._parameterControllers.asMap().entries.map((entry) {
-                  return _buildDynamicField(
-                    'Parameter ${entry.key + 1}',
-                    entry.value,
-                    IconsaxPlusLinear.setting_4,
-                    onDelete: entry.key > 0
-                        ? () => setState(
-                            () => _parameterControllers.removeAt(entry.key),
-                          )
-                        : null,
-                  );
-                }),
-                _buildAddButton('Add Parameter', _addParameter),
-              ]),
-
-              const SizedBox(height: 32),
-              _buildSectionHeader(
-                '4',
-                'Safety & Precautions',
-                'Critical handling instructions',
-              ),
-              const SizedBox(height: 24),
-              _buildModernCard([
-                ..._precautionControllers.asMap().entries.map((entry) {
-                  return _buildDynamicField(
-                    'Precaution ${entry.key + 1}',
-                    entry.value,
-                    IconsaxPlusLinear.info_circle,
-                    onDelete: entry.key > 0
-                        ? () => setState(
-                            () => _precautionControllers.removeAt(entry.key),
-                          )
-                        : null,
-                  );
-                }),
-                _buildAddButton('Add Precaution', _addPrecaution),
-              ]),
-
-              const SizedBox(height: 48),
-              _buildSubmitButton(),
-              const SizedBox(height: 60),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSectionHeader(String step, String title, String subtitle) {
-    return Row(
-      children: [
-        Container(
-          width: 40,
-          height: 40,
-          decoration: BoxDecoration(
-            color: AppColors.primary,
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Center(
-            child: Text(
-              step,
-              style: const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w800,
-                fontSize: 18,
+                    ],
+                  ),
+                  const SizedBox(height: 100),
+                ],
               ),
             ),
           ),
-        ),
-        const SizedBox(width: 16),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: AppTextStyles.cardTitle.copyWith(fontSize: 18),
-              ),
-              Text(
-                subtitle,
-                style: AppTextStyles.caption.copyWith(fontSize: 13),
-              ),
-            ],
-          ),
+    );
+  }
+
+  Widget _buildHeaderInfo() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Test Formulation', style: AppTextStyles.header.copyWith(fontSize: 32, fontWeight: FontWeight.w900)),
+        const SizedBox(height: 8),
+        Text(
+          'Register a new diagnostic protocol into the core medical intelligence repository.',
+          style: AppTextStyles.description.copyWith(fontSize: 16),
         ),
       ],
     );
   }
 
-  Widget _buildModernCard(List<Widget> children) {
+  Widget _buildSectionCard(String title, IconData icon, List<Widget> children) {
     return Container(
-      padding: const EdgeInsets.all(28),
-      decoration: AppCardStyles.sleekCard,
-      child: Column(children: children),
+      padding: const EdgeInsets.all(32),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(28),
+        border: Border.all(color: AppColors.divider.withAlpha(80)),
+        boxShadow: [
+          BoxShadow(color: Colors.black.withAlpha(5), blurRadius: 40, offset: const Offset(0, 10)),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(color: AppColors.primary.withAlpha(20), borderRadius: BorderRadius.circular(12)),
+                child: Icon(icon, color: AppColors.primary, size: 20),
+              ),
+              const SizedBox(width: 16),
+              Text(title, style: AppTextStyles.cardTitle.copyWith(fontSize: 18, fontWeight: FontWeight.w800)),
+            ],
+          ),
+          const SizedBox(height: 32),
+          ...children,
+        ],
+      ),
     );
   }
 
-  Widget _buildInputField(
-    String label,
-    TextEditingController controller,
-    IconData icon,
-    bool required, {
-    int maxLines = 1,
-  }) {
+  Widget _buildInputField(String label, TextEditingController controller, IconData icon, {int maxLines = 1, String? Function(String?)? validator}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            label,
-            style: AppTextStyles.caption.copyWith(
-              fontWeight: FontWeight.w700,
-              color: AppColors.textSecondary,
-            ),
-          ),
+          Text(label, style: AppTextStyles.caption.copyWith(fontWeight: FontWeight.w700, color: AppColors.textSecondary)),
           const SizedBox(height: 10),
           TextFormField(
             controller: controller,
             maxLines: maxLines,
-            validator: (value) => required && (value == null || value.isEmpty)
-                ? 'Required'
-                : null,
+            validator: validator,
+            style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
             decoration: InputDecoration(
-              prefixIcon: Icon(icon, size: 20, color: AppColors.textTertiary),
-              hintText: 'Enter $label',
+              prefixIcon: Icon(icon, size: 18, color: AppColors.primary),
+              filled: true,
+              fillColor: AppColors.background.withAlpha(128),
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: BorderSide.none),
+              enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: BorderSide(color: AppColors.divider.withAlpha(50))),
+              focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: AppColors.primary, width: 2)),
             ),
           ),
         ],
@@ -333,12 +288,7 @@ class _CreateLabTestScreenState extends ConsumerState<CreateLabTestScreen> {
     );
   }
 
-  Widget _buildDynamicField(
-    String label,
-    TextEditingController controller,
-    IconData icon, {
-    VoidCallback? onDelete,
-  }) {
+  Widget _buildDynamicField(String label, TextEditingController controller, {VoidCallback? onDelete}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: Row(
@@ -346,21 +296,24 @@ class _CreateLabTestScreenState extends ConsumerState<CreateLabTestScreen> {
           Expanded(
             child: TextFormField(
               controller: controller,
+              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
               decoration: InputDecoration(
-                prefixIcon: Icon(icon, size: 20, color: AppColors.textTertiary),
                 hintText: label,
+                prefixIcon: const Icon(IconsaxPlusLinear.arrow_right_1, size: 16, color: AppColors.primary),
+                filled: true,
+                fillColor: AppColors.background.withAlpha(128),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
               ),
             ),
           ),
-          if (onDelete != null)
+          if (onDelete != null) ...[
+            const SizedBox(width: 12),
             IconButton(
-              icon: const Icon(
-                IconsaxPlusLinear.trash,
-                color: AppColors.error,
-                size: 20,
-              ),
+              icon: const Icon(IconsaxPlusLinear.minus_cirlce, color: AppColors.error, size: 20),
               onPressed: onDelete,
             ),
+          ],
         ],
       ),
     );
@@ -369,61 +322,40 @@ class _CreateLabTestScreenState extends ConsumerState<CreateLabTestScreen> {
   Widget _buildAddButton(String label, VoidCallback onTap) {
     return TextButton.icon(
       onPressed: onTap,
-      icon: const Icon(IconsaxPlusLinear.add_circle, size: 18),
-      label: Text(label, style: const TextStyle(fontWeight: FontWeight.w700)),
+      icon: const Icon(IconsaxPlusLinear.add_circle, size: 18, color: AppColors.primary),
+      label: Text(label, style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.w800, fontSize: 13)),
     );
   }
 
   Widget _buildPhotoPicker() {
-    return Center(
-      child: Column(
-        children: [
-          GestureDetector(
-            onTap: _pickPhoto,
-            child: Container(
-              width: 200,
-              height: 120,
-              decoration: BoxDecoration(
-                color: AppColors.background,
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(
-                  color: AppColors.divider,
-                  width: 2,
-                  style: BorderStyle.solid,
-                ),
-                image: _testPhoto != null
-                    ? DecorationImage(
-                        image: kIsWeb
-                            ? MemoryImage(_testPhoto!.bytes!)
-                            : FileImage(File(_testPhoto!.path!))
-                                  as ImageProvider,
-                        fit: BoxFit.cover,
-                      )
-                    : null,
-              ),
-              child: _testPhoto == null
-                  ? const Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          IconsaxPlusLinear.camera,
-                          color: AppColors.textTertiary,
-                          size: 32,
-                        ),
-                        SizedBox(height: 8),
-                        Text(
-                          'Upload Test Photo',
-                          style: TextStyle(
-                            color: AppColors.textTertiary,
-                            fontSize: 12,
-                          ),
-                        ),
-                      ],
-                    )
-                  : null,
-            ),
-          ),
-        ],
+    return InkWell(
+      onTap: _pickPhoto,
+      borderRadius: BorderRadius.circular(20),
+      child: Container(
+        width: double.infinity,
+        height: 160,
+        decoration: BoxDecoration(
+          color: AppColors.background,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: AppColors.divider.withAlpha(100), style: BorderStyle.solid),
+          image: _testPhoto != null
+              ? DecorationImage(
+                  image: kIsWeb ? MemoryImage(_testPhoto!.bytes!) : FileImage(File(_testPhoto!.path!)) as ImageProvider,
+                  fit: BoxFit.cover,
+                )
+              : null,
+        ),
+        child: _testPhoto == null
+            ? Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(IconsaxPlusLinear.camera, color: AppColors.textTertiary, size: 40),
+                  const SizedBox(height: 12),
+                  Text('Upload Reference Photo', style: AppTextStyles.caption.copyWith(fontWeight: FontWeight.w700)),
+                  Text('JPG, PNG (Max 5MB)', style: AppTextStyles.caption.copyWith(fontSize: 10)),
+                ],
+              )
+            : null,
       ),
     );
   }
@@ -431,18 +363,12 @@ class _CreateLabTestScreenState extends ConsumerState<CreateLabTestScreen> {
   Widget _buildSubmitButton() {
     return Container(
       width: double.infinity,
-      height: 56,
+      height: 60,
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [AppColors.primary, AppColors.primaryAccent],
-        ),
-        borderRadius: BorderRadius.circular(16),
+        gradient: const LinearGradient(colors: [AppColors.primary, AppColors.primaryAccent]),
+        borderRadius: BorderRadius.circular(18),
         boxShadow: [
-          BoxShadow(
-            color: AppColors.primary.withAlpha(77),
-            blurRadius: 15,
-            offset: const Offset(0, 8),
-          ),
+          BoxShadow(color: AppColors.primary.withAlpha(60), blurRadius: 20, offset: const Offset(0, 10)),
         ],
       ),
       child: ElevatedButton(
@@ -450,18 +376,9 @@ class _CreateLabTestScreenState extends ConsumerState<CreateLabTestScreen> {
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.transparent,
           shadowColor: Colors.transparent,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
         ),
-        child: const Text(
-          'Publish Core Lab Test',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 16,
-            fontWeight: FontWeight.w800,
-          ),
-        ),
+        child: const Text('PUBLISH TEST PROTOCOL', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900, letterSpacing: 1.5, fontSize: 15)),
       ),
     );
   }
