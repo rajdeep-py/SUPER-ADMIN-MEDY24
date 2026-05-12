@@ -219,7 +219,7 @@ class _PathoLabDetailsScreenState extends ConsumerState<PathoLabDetailsScreen> {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: CustomAppBar(
-        title: _isEditing ? 'Edit Laboratory' : 'Lab Profile',
+        title: 'Laboratory Intelligence',
         subtitle: widget.lab.labName,
         showBackButton: true,
         actions: [
@@ -231,9 +231,7 @@ class _PathoLabDetailsScreenState extends ConsumerState<PathoLabDetailsScreen> {
             CustomAppBar.buildActionButton(
               icon: IconsaxPlusLinear.trash,
               iconColor: AppColors.error,
-              onTap: () {
-                // Confirmation dialog could go here
-              },
+              onTap: () {},
             ),
           ] else ...[
             CustomAppBar.buildActionButton(
@@ -247,232 +245,289 @@ class _PathoLabDetailsScreenState extends ConsumerState<PathoLabDetailsScreen> {
               onTap: () => setState(() => _isEditing = false),
             ),
           ],
+          const SizedBox(width: AppSpacing.screenPadding),
         ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
         child: Column(
           children: [
-            // Profile Header with Modern Look
+            // Profile Header with Modern Gradient & Glassmorphism feel
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.all(32),
+              padding: const EdgeInsets.all(40),
               decoration: AppCardStyles.sleekCard.copyWith(
                 gradient: LinearGradient(
-                  colors: [Colors.white, statusColor.withOpacity(0.05)],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
+                  colors: [
+                    statusColor.withOpacity(0.05),
+                    Colors.white,
+                    statusColor.withOpacity(0.02),
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
                 ),
               ),
               child: Column(
                 children: [
-                  Stack(
-                    children: [
-                      Container(
-                        width: 120,
-                        height: 120,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: statusColor.withOpacity(0.5),
-                            width: 3,
-                          ),
-                        ),
-                        child:
-                            _logoFile == null &&
-                                (_currentLogoUrl == null ||
-                                    _currentLogoUrl!.isEmpty)
-                            ? Icon(
-                                IconsaxPlusLinear.hospital,
-                                color: statusColor,
-                                size: 48,
-                              )
-                            : ClipOval(
-                                child: _logoFile != null
-                                    ? (kIsWeb
-                                          ? Image.memory(
-                                              _logoFile!.bytes!,
-                                              fit: BoxFit.cover,
-                                            )
-                                          : Image.network(
-                                              'file://${_logoFile!.path}',
-                                              fit: BoxFit.cover,
-                                            ))
-                                    : Image.network(
-                                        _currentLogoUrl!.startsWith('http')
-                                            ? _currentLogoUrl!
-                                            : '${ApiUrls.baseUrl}${_currentLogoUrl!.startsWith('/') ? _currentLogoUrl!.substring(1) : _currentLogoUrl}',
-                                        fit: BoxFit.cover,
-                                        errorBuilder:
-                                            (context, error, stackTrace) =>
-                                                Icon(
-                                                  IconsaxPlusLinear.hospital,
-                                                  color: statusColor,
-                                                  size: 48,
-                                                ),
-                                      ),
-                              ),
-                      ),
-                      if (_isEditing)
-                        Positioned(
-                          bottom: 0,
-                          right: 0,
-                          child: GestureDetector(
-                            onTap: () => _pickFile('logo'),
-                            child: Container(
-                              padding: const EdgeInsets.all(10),
-                              decoration: const BoxDecoration(
-                                color: AppColors.primary,
-                                shape: BoxShape.circle,
-                              ),
-                              child: const Icon(
-                                IconsaxPlusLinear.camera,
-                                color: Colors.white,
-                                size: 18,
-                              ),
-                            ),
-                          ),
-                        ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
+                  _buildHeaderLogo(statusColor),
+                  const SizedBox(height: 24),
                   Text(
                     widget.lab.labName,
-                    style: AppTextStyles.subHeader.copyWith(fontSize: 24),
+                    style: AppTextStyles.header.copyWith(fontSize: 28),
+                    textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 8),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 6,
-                    ),
-                    decoration: BoxDecoration(
-                      color: statusColor.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(100),
-                    ),
-                    child: Text(
-                      _status.toUpperCase(),
-                      style: AppTextStyles.caption.copyWith(
-                        color: statusColor,
-                        fontWeight: FontWeight.w800,
-                        fontSize: 10,
-                      ),
+                  Text(
+                    'Partner ID: ${widget.lab.labId}',
+                    style: AppTextStyles.tagline.copyWith(
+                      color: AppColors.textSecondary,
+                      letterSpacing: 2,
                     ),
                   ),
+                  const SizedBox(height: 20),
+                  _buildStatusBadge(statusColor),
                 ],
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 32),
 
-            // Details Sections
-            Container(
-              padding: const EdgeInsets.all(32),
-              decoration: AppCardStyles.sleekCard,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+            // Information Grid/Sections
+            _buildSectionHeader('Core Credentials', IconsaxPlusLinear.personalcard),
+            const SizedBox(height: 20),
+            _buildModernCard([
+              _buildDetailField(
+                'Full Business Name',
+                _nameController,
+                IconsaxPlusLinear.hospital,
+              ),
+              Row(
                 children: [
-                  _buildSectionHeader(
-                    'Basic Information',
-                    IconsaxPlusLinear.info_circle,
+                  Expanded(
+                    child: _buildDetailField(
+                      'Primary Contact',
+                      _mobileController,
+                      IconsaxPlusLinear.call,
+                    ),
                   ),
-                  const SizedBox(height: 24),
-                  _buildDetailField(
-                    'Laboratory Name',
-                    _nameController,
-                    IconsaxPlusLinear.hospital,
-                  ),
-                  _buildDetailField(
-                    'Mobile Number',
-                    _mobileController,
-                    IconsaxPlusLinear.call,
-                  ),
-                  _buildDetailField(
-                    'Email Address',
-                    _emailController,
-                    IconsaxPlusLinear.sms,
-                  ),
-                  _buildDetailField(
-                    'Password',
-                    _passwordController,
-                    IconsaxPlusLinear.key,
-                    isPassword: true,
-                    obscureText: _obscurePassword,
-                    onToggleVisibility: () => setState(() => _obscurePassword = !_obscurePassword),
-                  ),
-
-                  const SizedBox(height: 32),
-                  _buildSectionHeader(
-                    'Compliance & Records',
-                    IconsaxPlusLinear.verify,
-                  ),
-                  const SizedBox(height: 24),
-                  _buildDetailField(
-                    'GST Number',
-                    _gstController,
-                    IconsaxPlusLinear.percentage_square,
-                  ),
-                  _buildDetailField(
-                    'PAN Number',
-                    _panController,
-                    IconsaxPlusLinear.card_pos,
-                  ),
-                  _buildDetailField(
-                    'NABL Number',
-                    _nablController,
-                    IconsaxPlusLinear.award,
-                  ),
-                  const SizedBox(height: 16),
-                  _buildFileUploadTile(
-                    'Registration Certificate',
-                    _certFile?.name ?? _currentCertName ?? 'Document not available',
-                    () => _pickFile('cert'),
-                    url: widget.lab.registrationCertificateUrl,
-                  ),
-                  const SizedBox(height: 12),
-                  _buildFileUploadTile(
-                    'Bank Passbook',
-                    _passbookFile?.name ??
-                        _currentPassbookName ??
-                        'Document not available',
-                    () => _pickFile('passbook'),
-                    url: widget.lab.bankPassbookUrl,
-                  ),
-
-                  const SizedBox(height: 32),
-                  _buildSectionHeader('Location', IconsaxPlusLinear.location),
-                  const SizedBox(height: 24),
-                  _buildDetailField(
-                    'Full Address',
-                    _addressController,
-                    IconsaxPlusLinear.location,
-                    maxLines: 3,
-                  ),
-
-                  const SizedBox(height: 32),
-                  _buildSectionHeader(
-                    'Operational Controls',
-                    IconsaxPlusLinear.setting_4,
-                  ),
-                  const SizedBox(height: 24),
-                  _buildStatusDropdown(),
-
-                  const SizedBox(height: 24),
-                  _buildDetailField(
-                    'Emergency Contact',
-                    _emergencyController,
-                    IconsaxPlusLinear.call_calling,
-                  ),
-                  _buildDetailField(
-                    'WhatsApp Number',
-                    _whatsappController,
-                    IconsaxPlusLinear.sms,
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: _buildDetailField(
+                      'WhatsApp Business',
+                      _whatsappController,
+                      IconsaxPlusLinear.sms,
+                    ),
                   ),
                 ],
               ),
-            ),
+              _buildDetailField(
+                'Business Email',
+                _emailController,
+                IconsaxPlusLinear.sms,
+              ),
+              _buildDetailField(
+                'Secure Password',
+                _passwordController,
+                IconsaxPlusLinear.key,
+                isPassword: true,
+                obscureText: _obscurePassword,
+                onToggleVisibility: () =>
+                    setState(() => _obscurePassword = !_obscurePassword),
+              ),
+            ]),
+
+            const SizedBox(height: 32),
+            _buildSectionHeader('Compliance & Legal', IconsaxPlusLinear.verify),
+            const SizedBox(height: 20),
+            _buildModernCard([
+              Row(
+                children: [
+                  Expanded(
+                    child: _buildDetailField(
+                      'GST Identification',
+                      _gstController,
+                      IconsaxPlusLinear.percentage_square,
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: _buildDetailField(
+                      'PAN Number',
+                      _panController,
+                      IconsaxPlusLinear.card_pos,
+                    ),
+                  ),
+                ],
+              ),
+              _buildDetailField(
+                'NABL Accreditation',
+                _nablController,
+                IconsaxPlusLinear.award,
+              ),
+              const SizedBox(height: 12),
+              _buildFileUploadTile(
+                'Registration Certificate',
+                _certFile?.name ?? _currentCertName ?? 'Unavailable',
+                () => _pickFile('cert'),
+                url: widget.lab.registrationCertificateUrl,
+              ),
+              const SizedBox(height: 16),
+              _buildFileUploadTile(
+                'Bank Passbook Copy',
+                _passbookFile?.name ?? _currentPassbookName ?? 'Unavailable',
+                () => _pickFile('passbook'),
+                url: widget.lab.bankPassbookUrl,
+              ),
+            ]),
+
+            const SizedBox(height: 32),
+            _buildSectionHeader('Operational Intelligence', IconsaxPlusLinear.setting_4),
+            const SizedBox(height: 20),
+            _buildModernCard([
+              _buildStatusDropdown(),
+              const SizedBox(height: 24),
+              _buildDetailField(
+                'Official Physical Address',
+                _addressController,
+                IconsaxPlusLinear.location,
+                maxLines: 3,
+              ),
+              _buildDetailField(
+                'Emergency Response Contact',
+                _emergencyController,
+                IconsaxPlusLinear.call_calling,
+              ),
+            ]),
+
             const SizedBox(height: 60),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildHeaderLogo(Color statusColor) {
+    return Stack(
+      children: [
+        Container(
+          width: 140,
+          height: 140,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(
+              color: statusColor.withOpacity(0.3),
+              width: 4,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: statusColor.withOpacity(0.1),
+                blurRadius: 30,
+                spreadRadius: 5,
+              ),
+            ],
+          ),
+          child: _logoFile == null &&
+                  (_currentLogoUrl == null || _currentLogoUrl!.isEmpty)
+              ? Icon(
+                  IconsaxPlusLinear.hospital,
+                  color: statusColor,
+                  size: 56,
+                )
+              : ClipOval(
+                  child: _logoFile != null
+                      ? (kIsWeb
+                          ? Image.memory(
+                              _logoFile!.bytes!,
+                              fit: BoxFit.cover,
+                            )
+                          : Image.network(
+                              'file://${_logoFile!.path}',
+                              fit: BoxFit.cover,
+                            ))
+                      : Image.network(
+                          _currentLogoUrl!.startsWith('http')
+                              ? _currentLogoUrl!
+                              : '${ApiUrls.baseUrl}${_currentLogoUrl!.startsWith('/') ? _currentLogoUrl!.substring(1) : _currentLogoUrl}',
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) => Icon(
+                            IconsaxPlusLinear.hospital,
+                            color: statusColor,
+                            size: 56,
+                          ),
+                        ),
+                ),
+        ),
+        if (_isEditing)
+          Positioned(
+            bottom: 4,
+            right: 4,
+            child: GestureDetector(
+              onTap: () => _pickFile('logo'),
+              child: Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: AppColors.primary,
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.white, width: 3),
+                ),
+                child: const Icon(
+                  IconsaxPlusLinear.camera,
+                  color: Colors.white,
+                  size: 20,
+                ),
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+
+  Widget _buildStatusBadge(Color statusColor) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
+      decoration: BoxDecoration(
+        color: statusColor.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(100),
+        border: Border.all(color: statusColor.withOpacity(0.2)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 8,
+            height: 8,
+            decoration: BoxDecoration(
+              color: statusColor,
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: statusColor.withOpacity(0.5),
+                  blurRadius: 4,
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 10),
+          Text(
+            _status.toUpperCase(),
+            style: AppTextStyles.caption.copyWith(
+              color: statusColor,
+              fontWeight: FontWeight.w900,
+              letterSpacing: 1.5,
+              fontSize: 11,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildModernCard(List<Widget> children) {
+    return Container(
+      padding: const EdgeInsets.all(28),
+      decoration: AppCardStyles.sleekCard,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: children,
       ),
     );
   }

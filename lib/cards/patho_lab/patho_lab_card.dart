@@ -28,114 +28,92 @@ class PathoLabCard extends StatelessWidget {
     }
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 16),
+      margin: const EdgeInsets.only(bottom: 20),
       decoration: AppCardStyles.sleekCard.copyWith(
+        gradient: LinearGradient(
+          colors: [
+            Colors.white,
+            statusColor.withOpacity(0.02),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
         boxShadow: [
           BoxShadow(
-            color: statusColor.withOpacity(0.08),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
+            color: statusColor.withOpacity(0.05),
+            blurRadius: 30,
+            offset: const Offset(0, 12),
           ),
         ],
       ),
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(24),
+        hoverColor: statusColor.withOpacity(0.02),
+        splashColor: statusColor.withOpacity(0.05),
         child: Padding(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.all(24),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Lab Logo/Photo with Gradient Border
-              Container(
-                padding: const EdgeInsets.all(2),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: LinearGradient(
-                    colors: [statusColor, statusColor.withOpacity(0.3)],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                ),
-                child: Container(
-                  width: 72,
-                  height: 72,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.circle,
-                    image: lab.labLogoUrl != null && lab.labLogoUrl!.isNotEmpty
-                        ? DecorationImage(
-                            image: NetworkImage(lab.labLogoUrl!.startsWith('http')
-                                ? lab.labLogoUrl!
-                                : '${ApiUrls.baseUrl}${lab.labLogoUrl!.startsWith('/') ? lab.labLogoUrl!.substring(1) : lab.labLogoUrl}'),
-                            fit: BoxFit.cover,
-                          )
-                        : null,
-                  ),
-                  child: lab.labLogoUrl == null || lab.labLogoUrl!.isEmpty
-                      ? Icon(IconsaxPlusLinear.hospital, color: statusColor, size: 32)
-                      : null,
-                ),
-              ),
-              const SizedBox(width: 20),
-              
-              // Lab Info
+              // Enhanced Logo Container
+              _buildModernLogo(statusColor),
+              const SizedBox(width: 24),
+
+              // Lab Detailed Info
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Expanded(
-                          child: Text(
-                            lab.labName,
-                            style: AppTextStyles.cardTitle.copyWith(fontSize: 18),
-                            overflow: TextOverflow.ellipsis,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                lab.labName,
+                                style: AppTextStyles.cardTitle.copyWith(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w800,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                'PARTNER #${lab.labId}',
+                                style: AppTextStyles.tagline.copyWith(
+                                  fontSize: 11,
+                                  color: AppColors.primaryAccent,
+                                  letterSpacing: 1.2,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                          decoration: BoxDecoration(
-                            color: statusColor.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(color: statusColor.withOpacity(0.2)),
-                          ),
-                          child: Text(
-                            lab.status.toUpperCase(),
-                            style: AppTextStyles.caption.copyWith(
-                              color: statusColor,
-                              fontWeight: FontWeight.w800,
-                              fontSize: 10,
-                            ),
-                          ),
-                        ),
+                        _buildStatusBadge(statusColor),
                       ],
                     ),
-                    const SizedBox(height: 6),
-                    Text(
-                      'ID: ${lab.labId}',
-                      style: AppTextStyles.caption.copyWith(
-                        color: AppColors.primaryAccent.withOpacity(0.7),
-                        fontWeight: FontWeight.w700,
-                        letterSpacing: 0.5,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    _buildInfoRow(IconsaxPlusLinear.location, lab.address),
-                    const SizedBox(height: 6),
-                    _buildInfoRow(IconsaxPlusLinear.call, lab.mobileNumber),
+                    const SizedBox(height: 20),
+                    _buildInfoGrid(),
                   ],
                 ),
               ),
-              
-              // Arrow Indicator
-              const SizedBox(width: 8),
-              Center(
+
+              // Navigate Icon
+              const SizedBox(width: 12),
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: AppColors.background,
+                  borderRadius: BorderRadius.circular(14),
+                ),
                 child: Icon(
                   IconsaxPlusLinear.arrow_right_3,
-                  color: AppColors.textTertiary.withOpacity(0.5),
-                  size: 20,
+                  color: AppColors.textTertiary,
+                  size: 18,
                 ),
               ),
             ],
@@ -145,17 +123,119 @@ class PathoLabCard extends StatelessWidget {
     );
   }
 
+  Widget _buildModernLogo(Color statusColor) {
+    return Container(
+      padding: const EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(
+          color: statusColor.withOpacity(0.15),
+          width: 2,
+        ),
+      ),
+      child: Container(
+        width: 80,
+        height: 80,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(
+              color: statusColor.withOpacity(0.1),
+              blurRadius: 20,
+              spreadRadius: 2,
+            ),
+          ],
+        ),
+        child: ClipOval(
+          child: lab.labLogoUrl != null && lab.labLogoUrl!.isNotEmpty
+              ? Image.network(
+                  lab.labLogoUrl!.startsWith('http')
+                      ? lab.labLogoUrl!
+                      : '${ApiUrls.baseUrl}${lab.labLogoUrl!.startsWith('/') ? lab.labLogoUrl!.substring(1) : lab.labLogoUrl}',
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) => Icon(
+                    IconsaxPlusLinear.hospital,
+                    color: statusColor,
+                    size: 32,
+                  ),
+                )
+              : Icon(
+                  IconsaxPlusLinear.hospital,
+                  color: statusColor,
+                  size: 32,
+                ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStatusBadge(Color statusColor) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+      decoration: BoxDecoration(
+        color: statusColor.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(100),
+        border: Border.all(color: statusColor.withOpacity(0.2)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 6,
+            height: 6,
+            decoration: BoxDecoration(
+              color: statusColor,
+              shape: BoxShape.circle,
+            ),
+          ),
+          const SizedBox(width: 8),
+          Text(
+            lab.status.toUpperCase(),
+            style: AppTextStyles.caption.copyWith(
+              color: statusColor,
+              fontWeight: FontWeight.w900,
+              fontSize: 10,
+              letterSpacing: 1,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildInfoGrid() {
+    return Column(
+      children: [
+        _buildInfoRow(IconsaxPlusLinear.location, lab.address),
+        const SizedBox(height: 10),
+        Row(
+          children: [
+            Expanded(
+              child: _buildInfoRow(IconsaxPlusLinear.call, lab.mobileNumber),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: _buildInfoRow(IconsaxPlusLinear.sms, lab.emailAddress),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
   Widget _buildInfoRow(IconData icon, String text) {
     return Row(
       children: [
         Icon(icon, size: 16, color: AppColors.textTertiary),
-        const SizedBox(width: 8),
+        const SizedBox(width: 10),
         Expanded(
           child: Text(
             text,
             style: AppTextStyles.description.copyWith(
               fontSize: 13,
               color: AppColors.textSecondary,
+              fontWeight: FontWeight.w500,
             ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,

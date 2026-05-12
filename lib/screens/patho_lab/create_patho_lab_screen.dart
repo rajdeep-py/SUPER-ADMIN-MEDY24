@@ -159,8 +159,8 @@ class _CreatePathoLabScreenState extends ConsumerState<CreatePathoLabScreen> {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: const CustomAppBar(
-        title: 'Onboard Laboratory',
-        subtitle: 'Add a new partner pathology lab',
+        title: 'Partner Onboarding',
+        subtitle: 'Add a new high-precision laboratory',
         showBackButton: true,
       ),
       body: SingleChildScrollView(
@@ -169,186 +169,137 @@ class _CreatePathoLabScreenState extends ConsumerState<CreatePathoLabScreen> {
           key: _formKey,
           child: Column(
             children: [
-              Container(
-                padding: const EdgeInsets.all(24),
-                decoration: AppCardStyles.sleekCard,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+              _buildStepHeader(
+                '1',
+                'General Information',
+                'Basic credentials and contact details',
+              ),
+              const SizedBox(height: 24),
+              _buildModernCard([
+                _buildInputField(
+                  'Laboratory Name',
+                  _nameController,
+                  IconsaxPlusLinear.hospital,
+                  true,
+                ),
+                Row(
                   children: [
-                    Text(
-                      'General Information',
-                      style: AppTextStyles.cardTitle.copyWith(
-                        color: AppColors.primaryAccent,
+                    Expanded(
+                      child: _buildInputField(
+                        'Mobile Number',
+                        _mobileController,
+                        IconsaxPlusLinear.call,
+                        true,
                       ),
                     ),
-                    const SizedBox(height: 16),
-                    _buildInputField(
-                      'Laboratory Name *',
-                      _nameController,
-                      IconsaxPlusLinear.hospital,
-                      true,
-                    ),
-                    _buildInputField(
-                      'Mobile Number *',
-                      _mobileController,
-                      IconsaxPlusLinear.call,
-                      true,
-                    ),
-                    _buildInputField(
-                      'Email Address *',
-                      _emailController,
-                      IconsaxPlusLinear.sms,
-                      true,
-                    ),
-                    _buildInputField(
-                      'Password *',
-                      _passwordController,
-                      IconsaxPlusLinear.lock,
-                      true,
-                      isPassword: true,
-                    ),
-                    const SizedBox(height: 16),
-                    // Logo Picker
-                    Text(
-                      'Laboratory Logo',
-                      style: AppTextStyles.caption.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Center(
-                      child: Stack(
-                        children: [
-                          Container(
-                            width: 100,
-                            height: 100,
-                            decoration: BoxDecoration(
-                              color: AppColors.background,
-                              shape: BoxShape.circle,
-                              border: Border.all(color: AppColors.divider),
-                            ),
-                            child: _logoFile == null
-                                ? const Icon(
-                                    IconsaxPlusLinear.hospital,
-                                    color: AppColors.textTertiary,
-                                    size: 40,
-                                  )
-                                : ClipOval(
-                                    child: kIsWeb
-                                        ? Image.memory(
-                                            _logoFile!.bytes!,
-                                            fit: BoxFit.cover,
-                                          )
-                                        : Image.network(
-                                            'file://${_logoFile!.path}',
-                                            fit: BoxFit.cover,
-                                          ),
-                                  ),
-                          ),
-                          Positioned(
-                            bottom: 0,
-                            right: 0,
-                            child: GestureDetector(
-                              onTap: () => _pickFile('logo'),
-                              child: Container(
-                                padding: const EdgeInsets.all(8),
-                                decoration: const BoxDecoration(
-                                  color: AppColors.primary,
-                                  shape: BoxShape.circle,
-                                ),
-                                child: const Icon(
-                                  IconsaxPlusLinear.camera,
-                                  color: Colors.white,
-                                  size: 16,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-                    Text(
-                      'Compliance Details',
-                      style: AppTextStyles.cardTitle.copyWith(
-                        color: AppColors.primaryAccent,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    _buildInputField(
-                      'GST Number',
-                      _gstController,
-                      IconsaxPlusLinear.percentage_square,
-                      false,
-                    ),
-                    _buildInputField(
-                      'PAN Number *',
-                      _panController,
-                      IconsaxPlusLinear.card_pos,
-                      true,
-                    ),
-                    _buildInputField(
-                      'NABL Accreditation *',
-                      _nablController,
-                      IconsaxPlusLinear.award,
-                      true,
-                    ),
-                    const SizedBox(height: 16),
-                    _buildFileUploadTile(
-                      'Registration Certificate *',
-                      _certFile?.name ?? 'No file selected',
-                      () => _pickFile('cert'),
-                      true,
-                    ),
-                    const SizedBox(height: 12),
-                    _buildFileUploadTile(
-                      'Bank Passbook *',
-                      _passbookFile?.name ?? 'No file selected',
-                      () => _pickFile('passbook'),
-                      true,
-                    ),
-                    const SizedBox(height: 24),
-                    Text(
-                      'Location & Support',
-                      style: AppTextStyles.cardTitle.copyWith(
-                        color: AppColors.primaryAccent,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    _buildInputField(
-                      'Full Address *',
-                      _addressController,
-                      IconsaxPlusLinear.location,
-                      true,
-                      maxLines: 3,
-                    ),
-                    _buildInputField(
-                      'Emergency Contact',
-                      _emergencyController,
-                      IconsaxPlusLinear.call_calling,
-                      false,
-                    ),
-                    _buildInputField(
-                      'WhatsApp Number',
-                      _whatsappController,
-                      IconsaxPlusLinear.sms,
-                      false,
-                    ),
-                    const SizedBox(height: 32),
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: _onboardLab,
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 18),
-                        ),
-                        child: const Text('Confirm Onboarding'),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: _buildInputField(
+                        'WhatsApp Number',
+                        _whatsappController,
+                        IconsaxPlusLinear.sms,
+                        false,
                       ),
                     ),
                   ],
                 ),
+                _buildInputField(
+                  'Email Address',
+                  _emailController,
+                  IconsaxPlusLinear.sms,
+                  true,
+                ),
+                _buildInputField(
+                  'Account Password',
+                  _passwordController,
+                  IconsaxPlusLinear.lock,
+                  true,
+                  isPassword: true,
+                ),
+              ]),
+              const SizedBox(height: 32),
+              _buildStepHeader(
+                '2',
+                'Visual Branding',
+                'Identity and logo for the laboratory',
               ),
-              const SizedBox(height: 40),
+              const SizedBox(height: 24),
+              _buildModernCard([_buildLogoPicker()]),
+              const SizedBox(height: 32),
+              _buildStepHeader(
+                '3',
+                'Compliance & Verification',
+                'Required legal and accreditation documents',
+              ),
+              const SizedBox(height: 24),
+              _buildModernCard([
+                Row(
+                  children: [
+                    Expanded(
+                      child: _buildInputField(
+                        'PAN Number',
+                        _panController,
+                        IconsaxPlusLinear.card_pos,
+                        true,
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: _buildInputField(
+                        'GST Number',
+                        _gstController,
+                        IconsaxPlusLinear.percentage_square,
+                        false,
+                      ),
+                    ),
+                  ],
+                ),
+                _buildInputField(
+                  'NABL Accreditation ID',
+                  _nablController,
+                  IconsaxPlusLinear.award,
+                  true,
+                ),
+                const SizedBox(height: 12),
+                _buildFileUploadTile(
+                  'Registration Certificate',
+                  _certFile?.name ?? 'No file selected',
+                  () => _pickFile('cert'),
+                  true,
+                ),
+                const SizedBox(height: 16),
+                _buildFileUploadTile(
+                  'Bank Passbook Copy',
+                  _passbookFile?.name ?? 'No file selected',
+                  () => _pickFile('passbook'),
+                  true,
+                ),
+              ]),
+              const SizedBox(height: 32),
+              _buildStepHeader(
+                '4',
+                'Location & Support',
+                'Operational address and emergency contact',
+              ),
+              const SizedBox(height: 24),
+              _buildModernCard([
+                _buildInputField(
+                  'Operational Address',
+                  _addressController,
+                  IconsaxPlusLinear.location,
+                  true,
+                  maxLines: 3,
+                ),
+                _buildInputField(
+                  'Emergency Contact',
+                  _emergencyController,
+                  IconsaxPlusLinear.call_calling,
+                  false,
+                ),
+              ]),
+              const SizedBox(height: 48),
+              _buildSubmitButton(),
+              const SizedBox(height: 60),
             ],
           ),
         ),
@@ -356,51 +307,46 @@ class _CreatePathoLabScreenState extends ConsumerState<CreatePathoLabScreen> {
     );
   }
 
-  Widget _buildFileUploadTile(
-    String label,
-    String fileName,
-    VoidCallback onTap,
-    bool required,
-  ) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+  Widget _buildStepHeader(String step, String title, String subtitle) {
+    return Row(
       children: [
-        Text(
-          label,
-          style: AppTextStyles.caption.copyWith(fontWeight: FontWeight.w600),
-        ),
-        const SizedBox(height: 8),
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          width: 40,
+          height: 40,
           decoration: BoxDecoration(
-            color: AppColors.background,
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: AppColors.divider),
+            color: AppColors.primary,
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.primary.withOpacity(0.3),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
           ),
-          child: Row(
+          child: Center(
+            child: Text(
+              step,
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w800,
+                fontSize: 18,
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(width: 16),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Icon(
-                IconsaxPlusLinear.document_text,
-                color: AppColors.textSecondary,
-                size: 20,
+              Text(
+                title,
+                style: AppTextStyles.cardTitle.copyWith(fontSize: 18),
               ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  fileName,
-                  style: AppTextStyles.description.copyWith(fontSize: 13),
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              TextButton(
-                onPressed: onTap,
-                child: Text(
-                  'Upload',
-                  style: AppTextStyles.caption.copyWith(
-                    color: AppColors.primaryAccent,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
+              Text(
+                subtitle,
+                style: AppTextStyles.caption.copyWith(fontSize: 13),
               ),
             ],
           ),
@@ -409,38 +355,227 @@ class _CreatePathoLabScreenState extends ConsumerState<CreatePathoLabScreen> {
     );
   }
 
-  Widget _buildInputField(
-    String label,
-    TextEditingController controller,
-    IconData icon,
-    bool required, {
-    bool isPassword = false,
-    int maxLines = 1,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 20),
+  Widget _buildModernCard(List<Widget> children) {
+    return Container(
+      padding: const EdgeInsets.all(28),
+      decoration: AppCardStyles.sleekCard,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        children: children,
+      ),
+    );
+  }
+
+  Widget _buildLogoPicker() {
+    return Center(
+      child: Column(
         children: [
-          Text(
-            label,
-            style: AppTextStyles.caption.copyWith(fontWeight: FontWeight.w600),
+          Stack(
+            children: [
+              Container(
+                width: 120,
+                height: 120,
+                decoration: BoxDecoration(
+                  color: AppColors.background,
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: AppColors.primary.withOpacity(0.2),
+                    width: 2,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.05),
+                      blurRadius: 20,
+                    ),
+                  ],
+                ),
+                child: _logoFile == null
+                    ? const Icon(
+                        IconsaxPlusLinear.hospital,
+                        color: AppColors.textTertiary,
+                        size: 48,
+                      )
+                    : ClipOval(
+                        child: kIsWeb
+                            ? Image.memory(_logoFile!.bytes!, fit: BoxFit.cover)
+                            : Image.network(
+                                'file://${_logoFile!.path}',
+                                fit: BoxFit.cover,
+                              ),
+                      ),
+              ),
+              Positioned(
+                bottom: 4,
+                right: 4,
+                child: GestureDetector(
+                  onTap: () => _pickFile('logo'),
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: AppColors.primary,
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Colors.white, width: 2),
+                    ),
+                    child: const Icon(
+                      IconsaxPlusLinear.camera,
+                      color: Colors.white,
+                      size: 18,
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
-          const SizedBox(height: 8),
-          TextFormField(
-            controller: controller,
-            obscureText: isPassword,
-            maxLines: maxLines,
-            validator: (value) => required && (value == null || value.isEmpty)
-                ? 'This field is required'
-                : null,
-            decoration: InputDecoration(
-              prefixIcon: Icon(icon, size: 20, color: AppColors.textTertiary),
-              hintText: 'Enter $label',
-            ),
+          const SizedBox(height: 12),
+          Text(
+            'Upload Brand Logo',
+            style: AppTextStyles.caption.copyWith(fontWeight: FontWeight.w700),
           ),
         ],
       ),
     );
   }
+
+  Widget _buildSubmitButton() {
+    return Container(
+      width: double.infinity,
+      height: 56,
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [AppColors.primary, AppColors.primaryAccent],
+        ),
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.primary.withOpacity(0.3),
+            blurRadius: 15,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: ElevatedButton(
+        onPressed: _onboardLab,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.transparent,
+          shadowColor: Colors.transparent,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+        ),
+        child: const Text(
+          'Confirm Laboratory Onboarding',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 16,
+            fontWeight: FontWeight.w800,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+Widget _buildFileUploadTile(
+  String label,
+  String fileName,
+  VoidCallback onTap,
+  bool required,
+) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(
+        label,
+        style: AppTextStyles.caption.copyWith(fontWeight: FontWeight.w700),
+      ),
+      const SizedBox(height: 10),
+      Container(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        decoration: BoxDecoration(
+          color: AppColors.background.withOpacity(0.5),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: AppColors.divider),
+        ),
+        child: Row(
+          children: [
+            const Icon(
+              IconsaxPlusLinear.document_text,
+              color: AppColors.textSecondary,
+              size: 22,
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Text(
+                fileName,
+                style: AppTextStyles.description.copyWith(
+                  fontSize: 13,
+                  color: AppColors.textPrimary,
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            Container(
+              decoration: BoxDecoration(
+                color: AppColors.primary.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: TextButton(
+                onPressed: onTap,
+                child: Text(
+                  'Upload',
+                  style: AppTextStyles.caption.copyWith(
+                    color: AppColors.primaryAccent,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    ],
+  );
+}
+
+Widget _buildInputField(
+  String label,
+  TextEditingController controller,
+  IconData icon,
+  bool required, {
+  bool isPassword = false,
+  int maxLines = 1,
+}) {
+  return Padding(
+    padding: const EdgeInsets.only(bottom: 24),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label + (required ? ' *' : ''),
+          style: AppTextStyles.caption.copyWith(
+            fontWeight: FontWeight.w700,
+            color: AppColors.textSecondary,
+          ),
+        ),
+        const SizedBox(height: 10),
+        TextFormField(
+          controller: controller,
+          obscureText: isPassword,
+          maxLines: maxLines,
+          validator: (value) =>
+              required && (value == null || value.isEmpty) ? 'Required' : null,
+          style: AppTextStyles.description.copyWith(
+            fontWeight: FontWeight.w600,
+          ),
+          decoration: InputDecoration(
+            prefixIcon: Icon(icon, size: 20, color: AppColors.textTertiary),
+            hintText: 'Enter $label',
+            hintStyle: AppTextStyles.caption.copyWith(
+              color: AppColors.textTertiary.withOpacity(0.5),
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
 }

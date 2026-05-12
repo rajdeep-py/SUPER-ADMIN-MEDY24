@@ -48,10 +48,13 @@ class _PathoLabSearchFilterCardState
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.all(32),
       decoration: AppCardStyles.sleekCard.copyWith(
         gradient: LinearGradient(
-          colors: [Colors.white, AppColors.background.withOpacity(0.5)],
+          colors: [
+            Colors.white,
+            AppColors.primary.withOpacity(0.01),
+          ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -65,58 +68,65 @@ class _PathoLabSearchFilterCardState
               Row(
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(8),
+                    padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
                       color: AppColors.primary.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(12),
                     ),
                     child: const Icon(
                       IconsaxPlusLinear.search_status,
                       color: AppColors.primary,
-                      size: 20,
+                      size: 22,
                     ),
                   ),
-                  const SizedBox(width: 12),
-                  Text('Search & Filter', style: AppTextStyles.cardTitle),
+                  const SizedBox(width: 16),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Advanced Search',
+                        style: AppTextStyles.cardTitle.copyWith(fontSize: 18),
+                      ),
+                      Text(
+                        'Filter laboratories by specific criteria',
+                        style: AppTextStyles.caption.copyWith(fontSize: 12),
+                      ),
+                    ],
+                  ),
                 ],
               ),
-              TextButton.icon(
-                onPressed: _resetFilter,
-                icon: const Icon(IconsaxPlusLinear.refresh, size: 16),
-                label: const Text('Reset'),
-                style: TextButton.styleFrom(foregroundColor: AppColors.error),
-              ),
+              _buildResetButton(),
             ],
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 32),
 
-          // Responsive Grid for filters
+          // Search Grid
           Wrap(
-            spacing: 16,
-            runSpacing: 16,
+            spacing: 20,
+            runSpacing: 20,
             children: [
               _buildCompactField(
-                'Lab Name',
+                'Laboratory Name',
                 _nameController,
                 IconsaxPlusLinear.hospital,
               ),
               _buildCompactField(
-                'Email Address',
+                'Registered Email',
                 _emailController,
                 IconsaxPlusLinear.sms,
               ),
               _buildCompactField(
-                'Phone Number',
+                'Contact Number',
                 _phoneController,
                 IconsaxPlusLinear.call,
               ),
               _buildCompactField(
-                'WhatsApp No',
+                'WhatsApp Number',
                 _whatsappController,
                 IconsaxPlusLinear.sms,
               ),
               _buildCompactField(
-                'Location',
+                'Physical Address',
                 _addressController,
                 IconsaxPlusLinear.location,
               ),
@@ -124,22 +134,64 @@ class _PathoLabSearchFilterCardState
             ],
           ),
 
-          const SizedBox(height: 32),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton.icon(
-              onPressed: _applyFilter,
-              icon: const Icon(IconsaxPlusLinear.filter, size: 18),
-              label: const Text('Apply Advanced Filters'),
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 18),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-              ),
-            ),
+          const SizedBox(height: 40),
+          _buildApplyButton(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildResetButton() {
+    return TextButton.icon(
+      onPressed: _resetFilter,
+      icon: const Icon(IconsaxPlusLinear.refresh, size: 16),
+      label: const Text('Clear All'),
+      style: TextButton.styleFrom(
+        foregroundColor: AppColors.error,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        backgroundColor: AppColors.error.withOpacity(0.05),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildApplyButton() {
+    return Container(
+      width: double.infinity,
+      height: 56,
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [AppColors.primary, AppColors.primaryAccent],
+        ),
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.primary.withOpacity(0.2),
+            blurRadius: 15,
+            offset: const Offset(0, 8),
           ),
         ],
+      ),
+      child: ElevatedButton.icon(
+        onPressed: _applyFilter,
+        icon: const Icon(IconsaxPlusLinear.filter, size: 20),
+        label: const Text(
+          'Apply Refined Search',
+          style: TextStyle(
+            fontWeight: FontWeight.w800,
+            fontSize: 15,
+            letterSpacing: 0.5,
+          ),
+        ),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.transparent,
+          shadowColor: Colors.transparent,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+        ),
       ),
     );
   }
@@ -150,9 +202,7 @@ class _PathoLabSearchFilterCardState
     IconData icon,
   ) {
     return SizedBox(
-      width:
-          (MediaQuery.of(context).size.width - 80) /
-          2, // 2 items per row in ideal scenario
+      width: (MediaQuery.of(context).size.width - 120) / 3,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -161,19 +211,35 @@ class _PathoLabSearchFilterCardState
             style: AppTextStyles.caption.copyWith(
               fontWeight: FontWeight.w700,
               fontSize: 12,
+              color: AppColors.textSecondary,
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 10),
           TextField(
             controller: controller,
             onChanged: (_) => _applyFilter(),
+            style: AppTextStyles.description.copyWith(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+            ),
             decoration: InputDecoration(
-              prefixIcon: Icon(icon, size: 18, color: AppColors.textTertiary),
-              hintText: label,
+              prefixIcon: Icon(icon, size: 18, color: AppColors.primary),
+              hintText: 'Search...',
+              filled: true,
+              fillColor: AppColors.background.withOpacity(0.5),
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: 16,
-                vertical: 12,
+                vertical: 14,
               ),
+              suffixIcon: controller.text.isNotEmpty
+                  ? IconButton(
+                      icon: const Icon(IconsaxPlusLinear.close_circle, size: 16),
+                      onPressed: () {
+                        controller.clear();
+                        _applyFilter();
+                      },
+                    )
+                  : null,
             ),
           ),
         ],
@@ -183,22 +249,24 @@ class _PathoLabSearchFilterCardState
 
   Widget _buildStatusPicker() {
     return SizedBox(
-      width: (MediaQuery.of(context).size.width - 80) / 2,
+      width: (MediaQuery.of(context).size.width - 120) / 3,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Lab Status',
+            'Operational Status',
             style: AppTextStyles.caption.copyWith(
               fontWeight: FontWeight.w700,
               fontSize: 12,
+              color: AppColors.textSecondary,
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 10),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16),
+            height: 48,
             decoration: BoxDecoration(
-              color: AppColors.background,
+              color: AppColors.background.withOpacity(0.5),
               borderRadius: BorderRadius.circular(16),
               border: Border.all(color: AppColors.divider),
             ),
@@ -206,6 +274,7 @@ class _PathoLabSearchFilterCardState
               child: DropdownButton<String>(
                 value: _selectedStatus,
                 isExpanded: true,
+                icon: const Icon(IconsaxPlusLinear.arrow_down_1, size: 18),
                 onChanged: (value) {
                   setState(() => _selectedStatus = value!);
                   _applyFilter();
@@ -216,7 +285,9 @@ class _PathoLabSearchFilterCardState
                     child: Text(
                       s,
                       style: AppTextStyles.description.copyWith(
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 14,
+                        color: AppColors.textPrimary,
                       ),
                     ),
                   );

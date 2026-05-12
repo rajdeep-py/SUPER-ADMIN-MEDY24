@@ -58,6 +58,13 @@ class SideNavBar extends StatelessWidget {
                   label: 'Pharmacy Shop Management',
                   onTap: () {},
                 ),
+                _buildNavItem(
+                  context,
+                  icon: IconsaxPlusLinear.wallet,
+                  label: 'Payments & Subscriptions',
+                  onTap: () {},
+                ),
+
                 const Padding(
                   padding: EdgeInsets.symmetric(
                     vertical: 8.0,
