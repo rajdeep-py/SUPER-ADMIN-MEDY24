@@ -53,7 +53,7 @@ class _PathoLabSearchFilterCardState
         gradient: LinearGradient(
           colors: [
             Colors.white,
-            AppColors.primary.withOpacity(0.01),
+            AppColors.primary.withAlpha(3),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -70,7 +70,7 @@ class _PathoLabSearchFilterCardState
                   Container(
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      color: AppColors.primary.withOpacity(0.1),
+                      color: AppColors.primary.withAlpha(26),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: const Icon(
@@ -149,7 +149,7 @@ class _PathoLabSearchFilterCardState
       style: TextButton.styleFrom(
         foregroundColor: AppColors.error,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        backgroundColor: AppColors.error.withOpacity(0.05),
+        backgroundColor: AppColors.error.withAlpha(13),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
         ),
@@ -168,7 +168,7 @@ class _PathoLabSearchFilterCardState
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primary.withOpacity(0.2),
+            color: AppColors.primary.withAlpha(51),
             blurRadius: 15,
             offset: const Offset(0, 8),
           ),
@@ -226,7 +226,7 @@ class _PathoLabSearchFilterCardState
               prefixIcon: Icon(icon, size: 18, color: AppColors.primary),
               hintText: 'Search...',
               filled: true,
-              fillColor: AppColors.background.withOpacity(0.5),
+              fillColor: AppColors.background.withAlpha(128),
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: 16,
                 vertical: 14,
@@ -266,7 +266,7 @@ class _PathoLabSearchFilterCardState
             padding: const EdgeInsets.symmetric(horizontal: 16),
             height: 48,
             decoration: BoxDecoration(
-              color: AppColors.background.withOpacity(0.5),
+              color: AppColors.background.withAlpha(128),
               borderRadius: BorderRadius.circular(16),
               border: Border.all(color: AppColors.divider),
             ),

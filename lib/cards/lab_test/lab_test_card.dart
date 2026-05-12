@@ -18,7 +18,7 @@ class LabTestCard extends StatelessWidget {
         gradient: LinearGradient(
           colors: [
             Colors.white,
-            AppColors.primary.withOpacity(0.02),
+            AppColors.primary.withAlpha(5),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -112,7 +112,7 @@ class LabTestCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withAlpha(26),
         borderRadius: BorderRadius.circular(100),
       ),
       child: Row(

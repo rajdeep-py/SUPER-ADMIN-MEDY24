@@ -439,7 +439,7 @@ class _CreateLabTestScreenState extends ConsumerState<CreateLabTestScreen> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primary.withOpacity(0.3),
+            color: AppColors.primary.withAlpha(77),
             blurRadius: 15,
             offset: const Offset(0, 8),
           ),

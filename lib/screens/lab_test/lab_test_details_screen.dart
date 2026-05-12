@@ -184,7 +184,7 @@ class _LabTestDetailsScreenState extends ConsumerState<LabTestDetailsScreen> {
       padding: const EdgeInsets.all(40),
       decoration: AppCardStyles.sleekCard.copyWith(
         gradient: LinearGradient(
-          colors: [AppColors.primary.withOpacity(0.05), Colors.white, AppColors.primary.withOpacity(0.02)],
+          colors: [AppColors.primary.withAlpha(13), Colors.white, AppColors.primary.withAlpha(5)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -196,7 +196,7 @@ class _LabTestDetailsScreenState extends ConsumerState<LabTestDetailsScreen> {
             height: 140,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              border: Border.all(color: AppColors.primary.withOpacity(0.1), width: 4),
+              border: Border.all(color: AppColors.primary.withAlpha(26), width: 4),
               image: widget.test.testPhotoUrl != null && widget.test.testPhotoUrl!.isNotEmpty
                   ? DecorationImage(
                       image: NetworkImage(
@@ -262,7 +262,7 @@ class _LabTestDetailsScreenState extends ConsumerState<LabTestDetailsScreen> {
             decoration: InputDecoration(
               prefixIcon: Icon(icon, size: 20, color: _isEditing ? AppColors.primary : AppColors.textTertiary),
               filled: true,
-              fillColor: _isEditing ? Colors.white : AppColors.background.withOpacity(0.5),
+              fillColor: _isEditing ? Colors.white : AppColors.background.withAlpha(128),
             ),
           ),
         ],
@@ -283,7 +283,7 @@ class _LabTestDetailsScreenState extends ConsumerState<LabTestDetailsScreen> {
                 prefixIcon: Icon(icon, size: 20, color: _isEditing ? AppColors.primary : AppColors.textTertiary),
                 hintText: label,
                 filled: true,
-                fillColor: _isEditing ? Colors.white : AppColors.background.withOpacity(0.5),
+                fillColor: _isEditing ? Colors.white : AppColors.background.withAlpha(128),
               ),
             ),
           ),

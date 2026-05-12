@@ -109,7 +109,7 @@ class _LabTestListScreenState extends ConsumerState<LabTestListScreen> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primary.withOpacity(0.3),
+            color: AppColors.primary.withAlpha(77),
             blurRadius: 12,
             offset: const Offset(0, 6),
           ),
@@ -174,7 +174,7 @@ class _LabTestListScreenState extends ConsumerState<LabTestListScreen> {
       padding: const EdgeInsets.all(20),
       decoration: AppCardStyles.sleekCard.copyWith(
         gradient: LinearGradient(
-          colors: [Colors.white, color.withOpacity(0.02)],
+          colors: [Colors.white, color.withAlpha(5)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -185,7 +185,7 @@ class _LabTestListScreenState extends ConsumerState<LabTestListScreen> {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
+              color: color.withAlpha(26),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(icon, color: color, size: 20),
@@ -223,7 +223,7 @@ class _LabTestListScreenState extends ConsumerState<LabTestListScreen> {
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: AppColors.primary.withOpacity(0.05),
+                    color: AppColors.primary.withAlpha(13),
                     blurRadius: 40,
                   ),
                 ],

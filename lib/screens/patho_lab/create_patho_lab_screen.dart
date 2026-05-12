@@ -318,7 +318,7 @@ class _CreatePathoLabScreenState extends ConsumerState<CreatePathoLabScreen> {
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
-                color: AppColors.primary.withOpacity(0.3),
+                color: AppColors.primary.withAlpha(77),
                 blurRadius: 10,
                 offset: const Offset(0, 4),
               ),
@@ -379,12 +379,12 @@ class _CreatePathoLabScreenState extends ConsumerState<CreatePathoLabScreen> {
                   color: AppColors.background,
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: AppColors.primary.withOpacity(0.2),
+                    color: AppColors.primary.withAlpha(51),
                     width: 2,
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
+                      color: Colors.black.withAlpha(13),
                       blurRadius: 20,
                     ),
                   ],
@@ -447,7 +447,7 @@ class _CreatePathoLabScreenState extends ConsumerState<CreatePathoLabScreen> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primary.withOpacity(0.3),
+            color: AppColors.primary.withAlpha(77),
             blurRadius: 15,
             offset: const Offset(0, 8),
           ),
@@ -492,7 +492,7 @@ Widget _buildFileUploadTile(
       Container(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         decoration: BoxDecoration(
-          color: AppColors.background.withOpacity(0.5),
+          color: AppColors.background.withAlpha(128),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(color: AppColors.divider),
         ),
@@ -516,7 +516,7 @@ Widget _buildFileUploadTile(
             ),
             Container(
               decoration: BoxDecoration(
-                color: AppColors.primary.withOpacity(0.1),
+                color: AppColors.primary.withAlpha(26),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: TextButton(
@@ -571,7 +571,7 @@ Widget _buildInputField(
             prefixIcon: Icon(icon, size: 20, color: AppColors.textTertiary),
             hintText: 'Enter $label',
             hintStyle: AppTextStyles.caption.copyWith(
-              color: AppColors.textTertiary.withOpacity(0.5),
+              color: AppColors.textTertiary.withAlpha(128),
             ),
           ),
         ),

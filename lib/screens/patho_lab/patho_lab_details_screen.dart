@@ -259,9 +259,9 @@ class _PathoLabDetailsScreenState extends ConsumerState<PathoLabDetailsScreen> {
               decoration: AppCardStyles.sleekCard.copyWith(
                 gradient: LinearGradient(
                   colors: [
-                    statusColor.withOpacity(0.05),
+                    statusColor.withAlpha(13),
                     Colors.white,
-                    statusColor.withOpacity(0.02),
+                    statusColor.withAlpha(5),
                   ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
@@ -414,12 +414,12 @@ class _PathoLabDetailsScreenState extends ConsumerState<PathoLabDetailsScreen> {
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             border: Border.all(
-              color: statusColor.withOpacity(0.3),
+              color: statusColor.withAlpha(77),
               width: 4,
             ),
             boxShadow: [
               BoxShadow(
-                color: statusColor.withOpacity(0.1),
+                color: statusColor.withAlpha(26),
                 blurRadius: 30,
                 spreadRadius: 5,
               ),
@@ -485,9 +485,9 @@ class _PathoLabDetailsScreenState extends ConsumerState<PathoLabDetailsScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
       decoration: BoxDecoration(
-        color: statusColor.withOpacity(0.1),
+        color: statusColor.withAlpha(26),
         borderRadius: BorderRadius.circular(100),
-        border: Border.all(color: statusColor.withOpacity(0.2)),
+        border: Border.all(color: statusColor.withAlpha(51)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -500,7 +500,7 @@ class _PathoLabDetailsScreenState extends ConsumerState<PathoLabDetailsScreen> {
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: statusColor.withOpacity(0.5),
+                  color: statusColor.withAlpha(128),
                   blurRadius: 4,
                 ),
               ],
@@ -599,7 +599,7 @@ class _PathoLabDetailsScreenState extends ConsumerState<PathoLabDetailsScreen> {
               filled: true,
               fillColor: _isEditing
                   ? Colors.white
-                  : AppColors.background.withOpacity(0.5),
+                  : AppColors.background.withAlpha(128),
             ),
           ),
         ],
@@ -620,7 +620,7 @@ class _PathoLabDetailsScreenState extends ConsumerState<PathoLabDetailsScreen> {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
           decoration: BoxDecoration(
-            color: AppColors.background.withOpacity(0.5),
+            color: AppColors.background.withAlpha(128),
             borderRadius: BorderRadius.circular(16),
             border: Border.all(color: AppColors.divider),
           ),
@@ -686,7 +686,7 @@ class _PathoLabDetailsScreenState extends ConsumerState<PathoLabDetailsScreen> {
           decoration: BoxDecoration(
             color: _isEditing
                 ? Colors.white
-                : AppColors.background.withOpacity(0.5),
+                : AppColors.background.withAlpha(128),
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
               color: _isEditing ? AppColors.primary : AppColors.divider,

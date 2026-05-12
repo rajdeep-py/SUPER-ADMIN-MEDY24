@@ -33,14 +33,14 @@ class PathoLabCard extends StatelessWidget {
         gradient: LinearGradient(
           colors: [
             Colors.white,
-            statusColor.withOpacity(0.02),
+            statusColor.withAlpha(5),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         boxShadow: [
           BoxShadow(
-            color: statusColor.withOpacity(0.05),
+            color: statusColor.withAlpha(13),
             blurRadius: 30,
             offset: const Offset(0, 12),
           ),
@@ -49,8 +49,8 @@ class PathoLabCard extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(24),
-        hoverColor: statusColor.withOpacity(0.02),
-        splashColor: statusColor.withOpacity(0.05),
+        hoverColor: statusColor.withAlpha(5),
+        splashColor: statusColor.withAlpha(13),
         child: Padding(
           padding: const EdgeInsets.all(24),
           child: Row(
@@ -129,7 +129,7 @@ class PathoLabCard extends StatelessWidget {
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         border: Border.all(
-          color: statusColor.withOpacity(0.15),
+          color: statusColor.withAlpha(38),
           width: 2,
         ),
       ),
@@ -141,7 +141,7 @@ class PathoLabCard extends StatelessWidget {
           shape: BoxShape.circle,
           boxShadow: [
             BoxShadow(
-              color: statusColor.withOpacity(0.1),
+              color: statusColor.withAlpha(26),
               blurRadius: 20,
               spreadRadius: 2,
             ),
@@ -174,9 +174,9 @@ class PathoLabCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
       decoration: BoxDecoration(
-        color: statusColor.withOpacity(0.1),
+        color: statusColor.withAlpha(26),
         borderRadius: BorderRadius.circular(100),
-        border: Border.all(color: statusColor.withOpacity(0.2)),
+        border: Border.all(color: statusColor.withAlpha(51)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,

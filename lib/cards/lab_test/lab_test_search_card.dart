@@ -16,7 +16,7 @@ class LabTestSearchCard extends ConsumerWidget {
         gradient: LinearGradient(
           colors: [
             Colors.white,
-            AppColors.primary.withOpacity(0.01),
+            AppColors.primary.withAlpha(3),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -30,7 +30,7 @@ class LabTestSearchCard extends ConsumerWidget {
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: AppColors.primary.withOpacity(0.1),
+                  color: AppColors.primary.withAlpha(26),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: const Icon(
@@ -64,7 +64,7 @@ class LabTestSearchCard extends ConsumerWidget {
               hintText: 'Search for laboratory tests...',
               prefixIcon: const Icon(IconsaxPlusLinear.search_normal_1, size: 20),
               filled: true,
-              fillColor: AppColors.background.withOpacity(0.5),
+              fillColor: AppColors.background.withAlpha(128),
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: 20,
                 vertical: 16,
