@@ -49,7 +49,10 @@ class SideNavBar extends StatelessWidget {
                   context,
                   icon: IconsaxPlusLinear.health,
                   label: 'Medicine Management',
-                  onTap: () {},
+                  isSelected:
+                      GoRouterState.of(context).uri.toString() ==
+                      AppRouter.medicineManagement,
+                  onTap: () => context.push(AppRouter.medicineManagement),
                 ),
                 _buildNavItem(
                   context,

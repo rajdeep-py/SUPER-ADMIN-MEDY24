@@ -21,4 +21,11 @@ class ApiUrls {
   static const String aboutUsGetById = 'about-us/get-by';
   static const String aboutUsUpdateById = 'about-us/update-by';
   static const String aboutUsDeleteById = 'about-us/delete-by';
+
+  // Medicine Endpoints
+  static const String medicineCreate = 'medicines/create';
+  static const String medicineGetAll = 'medicines/get-all';
+  static const String medicineGetById = 'medicines/get-by';
+  static const String medicineUpdateById = 'medicines/update-by';
+  static const String medicineDeleteByIds = 'medicines/delete-by-ids';
 }

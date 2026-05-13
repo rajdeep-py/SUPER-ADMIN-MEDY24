@@ -208,6 +208,28 @@ class AppTheme {
       ),
     );
   }
+
+  static InputDecoration inputDecoration(String hintText) {
+    return InputDecoration(
+      hintText: hintText,
+      filled: true,
+      fillColor: Colors.white,
+      contentPadding: const EdgeInsets.all(18),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(AppSpacing.borderRadius),
+        borderSide: BorderSide.none,
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(AppSpacing.borderRadius),
+        borderSide: const BorderSide(color: AppColors.divider, width: 1),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(AppSpacing.borderRadius),
+        borderSide: const BorderSide(color: AppColors.primary, width: 2),
+      ),
+      hintStyle: AppTextStyles.caption,
+    );
+  }
 }
 
 /// [AppCardStyles] contains reusable BoxDecoration for non-Material cards
