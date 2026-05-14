@@ -85,8 +85,9 @@ class MedicineCsvFileUpload {
           if (values.length <= mrpIndex ||
               values.length <= nameIndex ||
               values.length <= categoryIndex ||
-              values.length <= quantityIndex)
+              values.length <= quantityIndex) {
             continue;
+          }
 
           final name = values[nameIndex].trim();
           final category = values[categoryIndex].trim();
