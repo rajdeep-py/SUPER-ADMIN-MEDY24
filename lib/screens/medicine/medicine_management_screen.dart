@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
+import '../../notifiers/medicine_notifier.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/app_bar.dart';
 import '../../widgets/side_nav_bar.dart';
@@ -131,14 +132,85 @@ class _MedicineManagementScreenState
                     ],
                   ),
                   const SizedBox(height: 24),
-                  if (medicineState.medicines.isEmpty)
+                  if (medicineState.filteredMedicines.isEmpty)
                     _buildEmptyState()
-                  else
+                  else ...[
                     const MedicineManagementTableCard(),
+                    const SizedBox(height: 32),
+                    _buildPagination(medicineState),
+                  ],
                   const SizedBox(height: 80),
                 ],
               ),
             ),
+    );
+  }
+
+  Widget _buildPagination(MedicineState state) {
+    final totalPages = (state.total / state.limit).ceil();
+    final currentPage = state.currentPage;
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: AppColors.divider),
+          ),
+          child: IconButton(
+            onPressed: currentPage > 1
+                ? () => ref
+                      .read(medicineNotifierProvider.notifier)
+                      .fetchMedicines(page: currentPage - 1)
+                : null,
+            icon: Icon(
+              IconsaxPlusLinear.arrow_left,
+              color: currentPage > 1
+                  ? AppColors.primary
+                  : AppColors.textTertiary,
+            ),
+          ),
+        ),
+        const SizedBox(width: 24),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          decoration: BoxDecoration(
+            color: AppColors.primary.withAlpha(20),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Text(
+            'Page $currentPage of $totalPages',
+            style: AppTextStyles.caption.copyWith(
+              color: AppColors.primaryAccent,
+              fontWeight: FontWeight.w800,
+              fontSize: 14,
+            ),
+          ),
+        ),
+        const SizedBox(width: 24),
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: AppColors.divider),
+          ),
+          child: IconButton(
+            onPressed: currentPage < totalPages
+                ? () => ref
+                      .read(medicineNotifierProvider.notifier)
+                      .fetchMedicines(page: currentPage + 1)
+                : null,
+            icon: Icon(
+              IconsaxPlusLinear.arrow_right_1,
+              color: currentPage < totalPages
+                  ? AppColors.primary
+                  : AppColors.textTertiary,
+            ),
+          ),
+        ),
+      ],
     );
   }
 
