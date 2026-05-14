@@ -9,6 +9,8 @@ import '../screens/lab_test/lab_test_details_screen.dart';
 import '../screens/lab_test/create_lab_test_screen.dart';
 import '../screens/about_us/about_us_screen.dart';
 import '../screens/medicine/medicine_management_screen.dart';
+import '../screens/terms_conditions/terms_conditions_screen.dart';
+import '../screens/privacy_policy/privacy_policy_screen.dart';
 import '../models/patho_lab.dart';
 import '../models/lab_test.dart';
 
@@ -23,6 +25,8 @@ class AppRouter {
   static const String createLabTest = '/create-lab-test';
   static const String aboutUs = '/about-us';
   static const String medicineManagement = '/medicines';
+  static const String termsConditions = '/terms-conditions';
+  static const String privacyPolicy = '/privacy-policy';
 
   static final router = GoRouter(
     initialLocation: splash,
@@ -72,6 +76,14 @@ class AppRouter {
       GoRoute(
         path: medicineManagement,
         builder: (context, state) => const MedicineManagementScreen(),
+      ),
+      GoRoute(
+        path: termsConditions,
+        builder: (context, state) => const TermsConditionsScreen(),
+      ),
+      GoRoute(
+        path: privacyPolicy,
+        builder: (context, state) => const PrivacyPolicyScreen(),
       ),
     ],
   );

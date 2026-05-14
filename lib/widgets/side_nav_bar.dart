@@ -92,6 +92,24 @@ class SideNavBar extends StatelessWidget {
                       AppRouter.aboutUs,
                   onTap: () => context.push(AppRouter.aboutUs),
                 ),
+                _buildNavItem(
+                  context,
+                  icon: IconsaxPlusLinear.document_text,
+                  label: 'Terms & Conditions',
+                  isSelected:
+                      GoRouterState.of(context).uri.toString() ==
+                      AppRouter.termsConditions,
+                  onTap: () => context.push(AppRouter.termsConditions),
+                ),
+                _buildNavItem(
+                  context,
+                  icon: IconsaxPlusLinear.shield_tick,
+                  label: 'Privacy Policy',
+                  isSelected:
+                      GoRouterState.of(context).uri.toString() ==
+                      AppRouter.privacyPolicy,
+                  onTap: () => context.push(AppRouter.privacyPolicy),
+                ),
               ],
             ),
           ),

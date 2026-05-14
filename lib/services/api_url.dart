@@ -28,4 +28,16 @@ class ApiUrls {
   static const String medicineGetById = 'medicines/get-by';
   static const String medicineUpdateById = 'medicines/update-by';
   static const String medicineDeleteByIds = 'medicines/delete-by-ids';
+
+  // Terms & Conditions Endpoints
+  static const String termsConditionsCreate = 'terms-conditions/create';
+  static const String termsConditionsGetAll = 'terms-conditions/get-all';
+  static const String termsConditionsUpdate = 'terms-conditions/update';
+  static const String termsConditionsDelete = 'terms-conditions/delete';
+
+  // Privacy Policy Endpoints
+  static const String privacyPolicyCreate = 'privacy-policies/create';
+  static const String privacyPolicyGetAll = 'privacy-policies/get-all';
+  static const String privacyPolicyUpdate = 'privacy-policies/update';
+  static const String privacyPolicyDelete = 'privacy-policies/delete';
 }
