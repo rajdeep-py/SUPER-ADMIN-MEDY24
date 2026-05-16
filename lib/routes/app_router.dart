@@ -13,6 +13,10 @@ import '../screens/terms_conditions/terms_conditions_screen.dart';
 import '../screens/privacy_policy/privacy_policy_screen.dart';
 import '../models/patho_lab.dart';
 import '../models/lab_test.dart';
+import '../models/pharma_shop.dart';
+import '../screens/pharma_shop/pharma_shop_list_screen.dart';
+import '../screens/pharma_shop/pharma_shop_details_screen.dart';
+
 
 class AppRouter {
   static const String splash = '/';
@@ -27,6 +31,9 @@ class AppRouter {
   static const String medicineManagement = '/medicines';
   static const String termsConditions = '/terms-conditions';
   static const String privacyPolicy = '/privacy-policy';
+  static const String pharmaShopList = '/pharma-shops';
+  static const String pharmaShopDetails = '/pharma-shop-details';
+
 
   static final router = GoRouter(
     initialLocation: splash,
@@ -84,6 +91,17 @@ class AppRouter {
       GoRoute(
         path: privacyPolicy,
         builder: (context, state) => const PrivacyPolicyScreen(),
+      ),
+      GoRoute(
+        path: pharmaShopList,
+        builder: (context, state) => const PharmaShopListScreen(),
+      ),
+      GoRoute(
+        path: pharmaShopDetails,
+        builder: (context, state) {
+          final shop = state.extra as PharmaShop;
+          return PharmaShopDetailsScreen(shop: shop);
+        },
       ),
     ],
   );

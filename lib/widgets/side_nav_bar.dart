@@ -67,7 +67,10 @@ class SideNavBar extends StatelessWidget {
                   context,
                   icon: IconsaxPlusLinear.shop,
                   label: 'Pharmacy Shop Management',
-                  onTap: () {},
+                  isSelected:
+                      GoRouterState.of(context).uri.toString() ==
+                      AppRouter.pharmaShopList,
+                  onTap: () => context.push(AppRouter.pharmaShopList),
                 ),
                 _buildNavItem(
                   context,

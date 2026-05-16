@@ -1,5 +1,6 @@
 class ApiUrls {
-  static const String baseUrl = 'http://127.0.0.1:8000/'; // Standardized with trailing slash
+  static const String baseUrl =
+      'http://127.0.0.1:8000/'; // Standardized with trailing slash
 
   // Patho Lab Auth Endpoints
   static const String pathoLabSignup = 'auth/patho-lab/signup';
@@ -40,4 +41,10 @@ class ApiUrls {
   static const String privacyPolicyGetAll = 'privacy-policies/get-all';
   static const String privacyPolicyUpdate = 'privacy-policies/update';
   static const String privacyPolicyDelete = 'privacy-policies/delete';
+
+  // Pharma Shop Endpoints
+  static const String pharmaShopGetAll = 'auth/pharma-shop/get-all';
+  static const String pharmaShopGetById = 'auth/pharma-shop/get-by';
+  static const String pharmaShopUpdateById = 'auth/pharma-shop/update-by';
+  static const String pharmaShopDeleteById = 'auth/pharma-shop/delete-by';
 }
