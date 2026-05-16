@@ -47,4 +47,9 @@ class ApiUrls {
   static const String pharmaShopGetById = 'auth/pharma-shop/get-by';
   static const String pharmaShopUpdateById = 'auth/pharma-shop/update-by';
   static const String pharmaShopDeleteById = 'auth/pharma-shop/delete-by';
+
+  // Customer Endpoints
+  static const String customerGetAll = 'customers/get-all';
+  static const String customerGetProfile = 'customers/profile';
+  static const String customerUpdateProfile = 'customers/profile';
 }

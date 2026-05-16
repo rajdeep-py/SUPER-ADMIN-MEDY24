@@ -9,6 +9,8 @@ class SideNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final currentRoute = GoRouterState.of(context).uri.toString();
+
     return Drawer(
       backgroundColor: AppColors.background,
       shape: const RoundedRectangleBorder(
@@ -33,50 +35,85 @@ class SideNavBar extends StatelessWidget {
                   context,
                   icon: IconsaxPlusLinear.element_3,
                   label: 'Dashboard',
-                  isSelected: true, // Defaulting to dashboard for demo
+                  isSelected: currentRoute == '/',
                   onTap: () {},
                 ),
                 _buildNavItem(
                   context,
                   icon: IconsaxPlusLinear.microscope,
                   label: 'Lab Test Management',
-                  isSelected:
-                      GoRouterState.of(context).uri.toString() ==
-                      AppRouter.labTestList,
+                  isSelected: currentRoute == AppRouter.labTestList,
                   onTap: () => context.push(AppRouter.labTestList),
                 ),
                 _buildNavItem(
                   context,
                   icon: IconsaxPlusLinear.health,
                   label: 'Medicine Management',
-                  isSelected:
-                      GoRouterState.of(context).uri.toString() ==
-                      AppRouter.medicineManagement,
+                  isSelected: currentRoute == AppRouter.medicineManagement,
                   onTap: () => context.push(AppRouter.medicineManagement),
+                ),
+                _buildNavItem(
+                  context,
+                  icon: IconsaxPlusLinear.user_search,
+                  label: 'Customer Management',
+                  isSelected: currentRoute == AppRouter.customerList,
+                  onTap: () => context.push(AppRouter.customerList),
                 ),
                 _buildNavItem(
                   context,
                   icon: IconsaxPlusLinear.hospital,
                   label: 'Patho Lab Management',
-                  isSelected:
-                      GoRouterState.of(context).uri.toString() ==
-                      AppRouter.pathoLabList,
+                  isSelected: currentRoute == AppRouter.pathoLabList,
                   onTap: () => context.push(AppRouter.pathoLabList),
                 ),
                 _buildNavItem(
                   context,
                   icon: IconsaxPlusLinear.shop,
                   label: 'Pharmacy Shop Management',
-                  isSelected:
-                      GoRouterState.of(context).uri.toString() ==
-                      AppRouter.pharmaShopList,
+                  isSelected: currentRoute == AppRouter.pharmaShopList,
                   onTap: () => context.push(AppRouter.pharmaShopList),
                 ),
-                _buildNavItem(
+
+                // Nested Order Management
+                _buildNestedNavItem(
+                  context,
+                  icon: IconsaxPlusLinear.box,
+                  label: 'Order Management',
+                  children: [
+                    _buildSubNavItem(
+                      context,
+                      icon: IconsaxPlusLinear.receipt_item,
+                      label: 'Lab Test Orders',
+                      onTap: () {},
+                    ),
+                    _buildSubNavItem(
+                      context,
+                      icon: IconsaxPlusLinear.bag_tick,
+                      label: 'Medicine Orders',
+                      onTap: () {},
+                    ),
+                  ],
+                ),
+
+                // Nested Payments & Subscriptions
+                _buildNestedNavItem(
                   context,
                   icon: IconsaxPlusLinear.wallet,
                   label: 'Payments & Subscriptions',
-                  onTap: () {},
+                  children: [
+                    _buildSubNavItem(
+                      context,
+                      icon: IconsaxPlusLinear.hospital,
+                      label: 'Patho Lab',
+                      onTap: () {},
+                    ),
+                    _buildSubNavItem(
+                      context,
+                      icon: IconsaxPlusLinear.shop,
+                      label: 'Pharmacy Shops',
+                      onTap: () {},
+                    ),
+                  ],
                 ),
 
                 const Padding(
@@ -90,35 +127,26 @@ class SideNavBar extends StatelessWidget {
                   context,
                   icon: IconsaxPlusLinear.building,
                   label: 'Company Profile Management',
-                  isSelected:
-                      GoRouterState.of(context).uri.toString() ==
-                      AppRouter.aboutUs,
+                  isSelected: currentRoute == AppRouter.aboutUs,
                   onTap: () => context.push(AppRouter.aboutUs),
                 ),
                 _buildNavItem(
                   context,
                   icon: IconsaxPlusLinear.document_text,
                   label: 'Terms & Conditions',
-                  isSelected:
-                      GoRouterState.of(context).uri.toString() ==
-                      AppRouter.termsConditions,
+                  isSelected: currentRoute == AppRouter.termsConditions,
                   onTap: () => context.push(AppRouter.termsConditions),
                 ),
                 _buildNavItem(
                   context,
                   icon: IconsaxPlusLinear.shield_tick,
                   label: 'Privacy Policy',
-                  isSelected:
-                      GoRouterState.of(context).uri.toString() ==
-                      AppRouter.privacyPolicy,
+                  isSelected: currentRoute == AppRouter.privacyPolicy,
                   onTap: () => context.push(AppRouter.privacyPolicy),
                 ),
               ],
             ),
           ),
-
-          // Footer / Logout
-          _buildFooter(),
         ],
       ),
     );
@@ -134,44 +162,35 @@ class SideNavBar extends StatelessWidget {
           bottomRight: Radius.circular(AppSpacing.borderRadius),
         ),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
         children: [
-          Row(
+          Container(
+            width: 48,
+            height: 48,
+            decoration: BoxDecoration(
+              color: AppColors.primary.withAlpha(30),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Center(
+              child: Image.asset('assets/logo/logo.png', width: 32, height: 32),
+            ),
+          ),
+          const SizedBox(width: 12),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  color: AppColors.primary.withAlpha(30),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Center(
-                  child: Image.asset(
-                    'assets/logo/logo.png',
-                    width: 32,
-                    height: 32,
-                  ),
+              Text(
+                'MEDY24',
+                style: AppTextStyles.header.copyWith(
+                  fontSize: 20,
+                  color: AppColors.primaryAccent,
                 ),
               ),
-              const SizedBox(width: 12),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'MEDY24',
-                    style: AppTextStyles.header.copyWith(
-                      fontSize: 20,
-                      color: AppColors.primaryAccent,
-                    ),
-                  ),
-                  Text(
-                    'Super Admin',
-                    style: AppTextStyles.caption.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
+              Text(
+                'Super Admin',
+                style: AppTextStyles.caption.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ],
           ),
@@ -224,38 +243,71 @@ class SideNavBar extends StatelessWidget {
     );
   }
 
-  Widget _buildFooter() {
-    return Container(
-      padding: const EdgeInsets.all(24),
-      child: Column(
-        children: [
-          const Divider(color: AppColors.divider),
-          const SizedBox(height: 12),
-          InkWell(
-            onTap: () {},
-            borderRadius: BorderRadius.circular(12),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-              child: Row(
-                children: [
-                  const Icon(
-                    IconsaxPlusLinear.logout,
-                    color: AppColors.error,
-                    size: 22,
-                  ),
-                  const SizedBox(width: 16),
-                  Text(
-                    'Logout',
-                    style: AppTextStyles.description.copyWith(
-                      color: AppColors.error,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
+  Widget _buildNestedNavItem(
+    BuildContext context, {
+    required IconData icon,
+    required String label,
+    required List<Widget> children,
+  }) {
+    return Theme(
+      data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 4),
+        child: ExpansionTile(
+          leading: Icon(icon, color: AppColors.textSecondary, size: 22),
+          title: Text(
+            label,
+            style: AppTextStyles.description.copyWith(
+              fontWeight: FontWeight.w500,
+              color: AppColors.textPrimary,
             ),
           ),
-        ],
+          iconColor: AppColors.primaryAccent,
+          collapsedIconColor: AppColors.textSecondary,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          childrenPadding: const EdgeInsets.only(left: 12),
+          children: children,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSubNavItem(
+    BuildContext context, {
+    required IconData icon,
+    required String label,
+    bool isSelected = false,
+    required VoidCallback onTap,
+  }) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 2, horizontal: 8),
+      decoration: BoxDecoration(
+        color: isSelected
+            ? AppColors.primary.withAlpha(15)
+            : Colors.transparent,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: ListTile(
+        onTap: onTap,
+        dense: true,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        leading: Icon(
+          icon,
+          color: isSelected ? AppColors.primaryAccent : AppColors.textTertiary,
+          size: 18,
+        ),
+        title: Text(
+          label,
+          style: AppTextStyles.caption.copyWith(
+            fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+            color: isSelected
+                ? AppColors.primaryAccent
+                : AppColors.textSecondary,
+          ),
+        ),
       ),
     );
   }

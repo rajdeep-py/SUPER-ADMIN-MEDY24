@@ -1,10 +1,10 @@
 import 'package:go_router/go_router.dart';
 import '../screens/auth/splash_screen.dart';
 import '../screens/auth/login_screen.dart';
+import '../screens/lab_test/lab_test_list_screen.dart';
 import '../screens/patho_lab/patho_lab_list_screen.dart';
 import '../screens/patho_lab/patho_lab_details_screen.dart';
 import '../screens/patho_lab/create_patho_lab_screen.dart';
-import '../screens/lab_test/lab_test_list_screen.dart';
 import '../screens/lab_test/lab_test_details_screen.dart';
 import '../screens/lab_test/create_lab_test_screen.dart';
 import '../screens/about_us/about_us_screen.dart';
@@ -16,7 +16,7 @@ import '../models/lab_test.dart';
 import '../models/pharma_shop.dart';
 import '../screens/pharma_shop/pharma_shop_list_screen.dart';
 import '../screens/pharma_shop/pharma_shop_details_screen.dart';
-
+import '../screens/customer/customer_list_screen.dart';
 
 class AppRouter {
   static const String splash = '/';
@@ -33,19 +33,13 @@ class AppRouter {
   static const String privacyPolicy = '/privacy-policy';
   static const String pharmaShopList = '/pharma-shops';
   static const String pharmaShopDetails = '/pharma-shop-details';
-
+  static const String customerList = '/customers';
 
   static final router = GoRouter(
     initialLocation: splash,
     routes: [
-      GoRoute(
-        path: splash,
-        builder: (context, state) => const SplashScreen(),
-      ),
-      GoRoute(
-        path: login,
-        builder: (context, state) => const LoginScreen(),
-      ),
+      GoRoute(path: splash, builder: (context, state) => const SplashScreen()),
+      GoRoute(path: login, builder: (context, state) => const LoginScreen()),
       GoRoute(
         path: pathoLabList,
         builder: (context, state) => const PathoLabListScreen(),
@@ -102,6 +96,10 @@ class AppRouter {
           final shop = state.extra as PharmaShop;
           return PharmaShopDetailsScreen(shop: shop);
         },
+      ),
+      GoRoute(
+        path: customerList,
+        builder: (context, state) => const CustomerListScreen(),
       ),
     ],
   );
